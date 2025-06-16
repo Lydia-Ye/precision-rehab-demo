@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+
+/* Light theme (default) */
+:root {
+  --background: #f7fbfc;
+  --foreground: #171717;
+
+  --color-primary: #79c381; /* Mint green */
+  --color-accent: #A5D8FF;   /* Soft blue */
+  --color-warning: #FF6B6B; /* Coral */
+  --color-muted: #f1f5f9;    /* Light gray bg */
+  --color-border: #e2e8f0;
+
+  --button-bg: var(--color-primary);
+  --button-text: #ffffff;
+}
+
+/* Dark theme */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #f4f4f5;
+
+  --color-primary: #4ade80; /* Emerald */
+  --color-accent: #60a5fa;  /* Sky blue */
+  --color-muted: #1e1e1e;
+  --color-border: #2a2a2a;
+
+  --button-bg: var(--color-primary);
+  --button-text: #0a0a0a;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans, 'Geist', sans-serif);
+}

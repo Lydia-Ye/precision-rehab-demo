@@ -1,0 +1,700 @@
+[
+  {
+    "name": "1",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 17.492752075195312,
+    "weeksSinceStroke": 23.69296646118164,
+    "leftStroke": false,
+    "male": true,
+    "horizon": 12,
+    "id": "1",
+    "past": true,
+    "outcomes": [
+      1.9532722234725952,
+      2.7522964477539062,
+      3.071348190307617,
+      3.3655354976654053,
+      4.397143840789795,
+      4.513906955718994,
+      4.645636558532715,
+      4.680513858795166,
+      4.761356353759766,
+      4.8184685707092285,
+      4.896391868591309,
+      4.8932952880859375,
+      4.870516300201416
+    ],
+    "actions": [
+      8,
+      3,
+      4,
+      9,
+      4,
+      5,
+      2,
+      7,
+      7,
+      5,
+      3,
+      3
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "2",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 19.013681411743164,
+    "weeksSinceStroke": 14.328372955322266,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 12,
+    "id": "2",
+    "past": true,
+    "outcomes": [
+      1.6825162172317505,
+      1.9314985275268555,
+      2.0472664833068848,
+      2.2642662525177,
+      2.151139974594116,
+      1.8720927238464355,
+      1.9926108121871948,
+      2.1843738555908203,
+      2.342135190963745,
+      2.157667875289917,
+      2.2310879230499268,
+      2.361185073852539,
+      2.6770102977752686
+    ],
+    "actions": [
+      4,
+      3,
+      5,
+      4,
+      4,
+      5,
+      5,
+      3,
+      4,
+      6,
+      8,
+      9
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "3",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 26.01026153564453,
+    "weeksSinceStroke": 17.131853103637695,
+    "leftStroke": false,
+    "male": true,
+    "horizon": 12,
+    "id": "3",
+    "past": true,
+    "outcomes": [
+      2.5502004623413086,
+      3.509816884994507,
+      4.1966400146484375,
+      4.617253303527832,
+      4.775537967681885,
+      4.913346767425537,
+      4.945509910583496,
+      4.990841865539551,
+      4.995681285858154,
+      4.999317646026611,
+      4.999637126922607,
+      4.999834060668945,
+      4.999942302703857
+    ],
+    "actions": [
+      3,
+      4,
+      5,
+      2,
+      6,
+      2,
+      9,
+      4,
+      10,
+      4,
+      5,
+      6
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "4",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 25.578907012939453,
+    "weeksSinceStroke": 19.596372604370117,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 12,
+    "id": "4",
+    "past": true,
+    "outcomes": [
+      2.084350347518921,
+      2.066226005554199,
+      2.3945770263671875,
+      2.068629264831543,
+      1.939778208732605,
+      1.9188423156738281,
+      1.7269819974899292,
+      1.8938814401626587,
+      2.33730149269104,
+      2.08843731880188,
+      2.0163161754608154,
+      1.8006991147994995,
+      1.6320159435272217
+    ],
+    "actions": [
+      8,
+      7,
+      4,
+      3,
+      9,
+      2,
+      5,
+      4,
+      5,
+      2,
+      5,
+      6
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "5",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 24.031909942626953,
+    "weeksSinceStroke": 17.754919052124023,
+    "leftStroke": true,
+    "male": false,
+    "horizon": 12,
+    "id": "5",
+    "past": true,
+    "outcomes": [
+      1.9061826467514038,
+      1.5377397537231445,
+      1.3006199598312378,
+      1.4460898637771606,
+      1.6400278806686401,
+      1.1034382581710815,
+      1.2039573192596436,
+      0.8953705430030823,
+      0.7625977993011475,
+      0.7286351323127747,
+      0.8106517791748047,
+      0.8140518665313721,
+      0.6919267177581787
+    ],
+    "actions": [
+      3,
+      5,
+      9,
+      6,
+      1,
+      6,
+      2,
+      2,
+      10,
+      4,
+      7,
+      5
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "6",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 26.233518600463867,
+    "weeksSinceStroke": 21.275142669677734,
+    "leftStroke": false,
+    "male": true,
+    "horizon": 12,
+    "id": "6",
+    "past": true,
+    "outcomes": [
+      1.5757217407226562,
+      1.5203182697296143,
+      1.3241862058639526,
+      1.288733959197998,
+      1.5418577194213867,
+      1.7969311475753784,
+      2.1103880405426025,
+      1.9281457662582397,
+      2.115227460861206,
+      1.471399188041687,
+      1.6521730422973633,
+      1.3254183530807495,
+      1.375261664390564
+    ],
+    "actions": [
+      6,
+      2,
+      6,
+      7,
+      6,
+      8,
+      4,
+      6,
+      0,
+      6,
+      2,
+      7
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "7",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 31.301572799682617,
+    "weeksSinceStroke": 13.090380668640137,
+    "leftStroke": false,
+    "male": true,
+    "horizon": 12,
+    "id": "7",
+    "past": true,
+    "outcomes": [
+      2.5784811973571777,
+      3.175615072250366,
+      2.7557625770568848,
+      2.797239065170288,
+      2.765002727508545,
+      3.1625654697418213,
+      3.098759651184082,
+      2.9619035720825195,
+      2.7975006103515625,
+      3.5851259231567383,
+      3.8430123329162598,
+      3.699335813522339,
+      3.529195785522461
+    ],
+    "actions": [
+      11,
+      0,
+      6,
+      4,
+      4,
+      6,
+      2,
+      2,
+      9,
+      7,
+      5,
+      4
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "8",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 26.12270164489746,
+    "weeksSinceStroke": 20.83712387084961,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 12,
+    "id": "8",
+    "past": true,
+    "outcomes": [
+      2.163755416870117,
+      3.5262556076049805,
+      4.371840476989746,
+      4.670336723327637,
+      4.723735332489014,
+      4.8979315757751465,
+      4.936058044433594,
+      3.9692277908325195,
+      4.368446731567383,
+      4.488595008850098,
+      4.592241859436035,
+      4.497160911560059,
+      4.798123645782471
+    ],
+    "actions": [
+      6,
+      6,
+      5,
+      3,
+      7,
+      4,
+      4,
+      2,
+      7,
+      6,
+      7,
+      3
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "9",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 24.366413116455078,
+    "weeksSinceStroke": 21.51668930053711,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 12,
+    "id": "9",
+    "past": true,
+    "outcomes": [
+      2.193854808807373,
+      2.8985743522644043,
+      3.2868478298187256,
+      3.54213809967041,
+      3.834249973297119,
+      4.222284317016602,
+      4.560255527496338,
+      4.585712909698486,
+      4.7387495040893555,
+      4.897809028625488,
+      4.957358360290527,
+      4.9653120040893555,
+      4.9860711097717285
+    ],
+    "actions": [
+      6,
+      5,
+      6,
+      2,
+      2,
+      5,
+      1,
+      9,
+      5,
+      6,
+      5,
+      8
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "10",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 27.06704330444336,
+    "weeksSinceStroke": 14.394647598266602,
+    "leftStroke": true,
+    "male": false,
+    "horizon": 12,
+    "id": "10",
+    "past": true,
+    "outcomes": [
+      2.15555739402771,
+      2.70125412940979,
+      2.966001510620117,
+      2.539139747619629,
+      2.591465711593628,
+      3.0682551860809326,
+      3.0306644439697266,
+      3.45078444480896,
+      3.5807955265045166,
+      4.130022048950195,
+      4.164727687835693,
+      4.059893608093262,
+      4.273318767547607
+    ],
+    "actions": [
+      7,
+      3,
+      2,
+      3,
+      6,
+      5,
+      6,
+      5,
+      11,
+      4,
+      0,
+      8
+    ],
+    "modelBayesian": {
+      "modelAlias": null,
+      "modelUri": null
+    },
+    "modelSGLD": {
+      "modelAlias": null,
+      "modelUri": null
+    }
+  },
+  {
+    "name": "11",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 80,
+    "weeksSinceStroke": 15,
+    "leftStroke": true,
+    "male": true,
+    "horizon": 10,
+    "past": false,
+    "outcomes": [
+      2,
+      2.5,
+      3.4
+    ],
+    "actions": [
+      4,
+      5,
+      null
+    ],
+    "id": "11",
+    "modelBayesian": {
+      "modelAlias": "11_Patient_11_bayes_version_8",
+      "modelUri": "runs:/1a5688483fd34e16b41dedfb6ecbee37/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "11_Patient_11_SGLD_version_1",
+      "modelUri": "runs:/b0d74ae5a4314485a40b33ca57cbfc47/mal_planner_model"
+    }
+  },
+  {
+    "name": "12",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 30,
+    "weeksSinceStroke": 15,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 12,
+    "past": false,
+    "outcomes": [
+      1.68,
+      1.93,
+      2.04,
+      2.26
+    ],
+    "actions": [
+      4,
+      3,
+      5,
+      null
+    ],
+    "id": "12",
+    "modelBayesian": {
+      "modelAlias": "12_Patient_12_bayes_version_11",
+      "modelUri": "runs:/eac6366655474dfb80720af6815d602e/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "12_Patient_12_SGLD_version_1",
+      "modelUri": "runs:/524e518c45564e2da639e7c236190144/mal_planner_model"
+    }
+  },
+  {
+    "name": "13",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 24,
+    "weeksSinceStroke": 15,
+    "leftStroke": true,
+    "male": false,
+    "horizon": 8,
+    "past": false,
+    "outcomes": [
+      2.19,
+      2.89,
+      3.24,
+      3
+    ],
+    "actions": [
+      6,
+      5,
+      3,
+      null
+    ],
+    "id": "13",
+    "modelBayesian": {
+      "modelAlias": "13_Patient_13_bayes_version_8",
+      "modelUri": "runs:/37ce4d22b14b4671ab4ceb6624646a13/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "13_Patient_13_SGLD_version_1",
+      "modelUri": "runs:/ae7946943fc74b5082bbaf0cc5ec5bef/mal_planner_model"
+    }
+  },
+  {
+    "name": "14",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 80,
+    "weeksSinceStroke": 15,
+    "leftStroke": true,
+    "male": true,
+    "horizon": 10,
+    "past": false,
+    "outcomes": [
+      2.3,
+      2.53,
+      3.201,
+      2.83
+    ],
+    "actions": [
+      5,
+      3,
+      4.4,
+      null
+    ],
+    "id": "14",
+    "modelBayesian": {
+      "modelAlias": "14_Patient_14_bayes_version_7",
+      "modelUri": "runs:/d91c1ee791c847e7b5d23edca211f3f1/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "14_Patient_14_SGLD_version_1",
+      "modelUri": "runs:/5eeec77e108845bca85803b5f8679838/mal_planner_model"
+    }
+  },
+  {
+    "name": "15",
+    "budget": 28,
+    "maxDose": 20,
+    "age": 80,
+    "weeksSinceStroke": 15,
+    "leftStroke": true,
+    "male": false,
+    "horizon": 6,
+    "past": false,
+    "outcomes": [],
+    "actions": [],
+    "id": "15",
+    "modelBayesian": {
+      "modelAlias": "15_Patient_15_bayes_version_1",
+      "modelUri": "runs:/c148d47bb39f4f7c9fe561e762445596/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "15_Patient_15_SGLD_version_1",
+      "modelUri": "runs:/f4c00838f41e453db34e2de86224c5bb/mal_planner_model"
+    }
+  },
+  {
+    "name": "16",
+    "budget": 55,
+    "maxDose": 20,
+    "age": 50,
+    "weeksSinceStroke": 15,
+    "leftStroke": false,
+    "male": true,
+    "horizon": 8,
+    "past": false,
+    "outcomes": [
+      2.3,
+      3.3,
+      3.8
+    ],
+    "actions": [
+      5,
+      4,
+      null
+    ],
+    "id": "16",
+    "modelBayesian": {
+      "modelAlias": "16_Patient_16_bayes_version_3",
+      "modelUri": "runs:/ce9e1adc36cd400883fb3e9b0f022ea5/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "16_Patient_16_SGLD_version_1",
+      "modelUri": "runs:/1c838c0b79634f84954e216335cabced/mal_planner_model"
+    }
+  },
+  {
+    "name": "17",
+    "budget": 40,
+    "maxDose": 20,
+    "age": 80,
+    "weeksSinceStroke": 15,
+    "leftStroke": true,
+    "male": true,
+    "horizon": 10,
+    "past": false,
+    "outcomes": [
+      3.7,
+      3.9,
+      4.0123
+    ],
+    "actions": [
+      5,
+      3,
+      null
+    ],
+    "id": "17",
+    "modelBayesian": {
+      "modelAlias": "17_Patient_17_bayes_version_4",
+      "modelUri": "runs:/87a8c2352c044b78a2e929e51ee5272e/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "17_Patient_17_SGLD_version_1",
+      "modelUri": "runs:/191f5d7d915346ea92896af9cd8dee38/mal_planner_model"
+    }
+  }
+]
