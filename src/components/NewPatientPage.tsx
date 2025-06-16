@@ -16,6 +16,7 @@ import { ResultsPostResponse } from "@/types/resultsPostResponse";
 import { PatientsPutRequest } from "@/types/patientsPutRequest";
 import Button from "./ui/Button";
 import Badge from "./ui/Badge";
+import { mockModelParams } from '@/mock/modelParamsData';
 
 interface PatientPageProps {
   patient: Patient;
@@ -45,16 +46,8 @@ const [selectedModels, setSelectedModels] = useState({
 });
 
 useEffect(() => {
-  const fetchBayesianParam = async () => {
-    const encodedAlias = encodeURIComponent(patient.modelBayesian.modelAlias);
-    const res = await fetch(`http://localhost:5001/api/model-info?alias=${encodedAlias}`);
-    const data = await res.json();
-    if (res.ok && data.used_param) {
-      setBayesianParam(data.used_param);
-    }
-  };
-
-  fetchBayesianParam();
+  const params = mockModelParams[patient.modelBayesian.modelAlias] || null;
+  setBayesianParam(params);
 }, [patient.modelBayesian.modelAlias]);
 
 
