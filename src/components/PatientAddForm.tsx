@@ -1,189 +1,270 @@
 "use client";
 
-import { useState } from "react";
-import { MockPatient } from "../data/mockData";
-import Button from "./ui/Button";
+import React, { useState } from "react";
+import { Patient } from "@/types/patient";
+import { PatientsPostRequest } from "@/types/patientsPostRoute";
 
 interface PatientAddFormProps {
-    patients: MockPatient[];
-    setPatients: React.Dispatch<React.SetStateAction<MockPatient[]>>;
-    setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
+    patients: Patient[];
+    setPatients: React.Dispatch<React.SetStateAction<Patient[]>>; 
+    setShowForm: React.Dispatch<React.SetStateAction<boolean>>; 
 }
 
-export default function PatientAddForm({
-    patients,
-    setPatients,
-    setShowForm
-}: PatientAddFormProps) {
-    const [formData, setFormData] = useState({
-        name: "",
-        budget: 30,
-        maxDose: 20,
-        age: 60,
-        weeksSinceStroke: 4,
-        leftStroke: true,
-        male: true,
-        horizon: 12,
-        past: true,
-        outcomes: [2.0],
-        actions: [10]
-    });
+export default function PatientAddForm({ patients, setPatients, setShowForm }: PatientAddFormProps) {
+    const [name, setName] = useState("");
+    const [budget, setBudget] = useState(60);
+    const [maxDose, setMaxDose] = useState(20);
+    const [age, setAge] = useState(80);
+    const [weeksSinceStroke, setWeeksSinceStroke] = useState(15);
+    const [leftStroke, setLeftStroke] = useState(true);
+    const [male, setMale] = useState(true);
+    // Horizon input in weeks
+    const [horizonWeeks, setHorizonWeeks] = useState(20);
+    
+    // Loading for adding patient.
+    const [addingLoading, setAddingLoading] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    // Calculate next patient ID
+    const nextPatientId = patients.length + 1;
+
+    // Function to add a new patient.
+    const addPatient = async (e: React.FormEvent) => {
+        setAddingLoading(true);
+
+        // Prevents default form action (refresh page).
         e.preventDefault();
-        const newPatient: Omit<MockPatient, 'id'> = {
-            ...formData,
-            outcomes: formData.outcomes,
-            actions: formData.actions
-        };
-        setPatients([...patients, { ...newPatient, id: String(patients.length + 1) }]);
-        setShowForm(false);
-    };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : type === 'number' ? Number(value) : value
-        }));
+        // TODO: Error handling.
+
+        const horizonUnits = Math.ceil(horizonWeeks / 2);
+        const newPatient: PatientsPostRequest = {
+            // User parameters.
+            name: name.trim(),
+            budget: budget,
+            maxDose: maxDose,
+            age: age,
+            weeksSinceStroke: weeksSinceStroke,
+            leftStroke: leftStroke,
+            male: male,
+
+            // Fixed horizon.
+            horizon: horizonUnits,
+
+            // Past patient state.
+            past: false,
+            outcomes: [], 
+            actions: [],
+        };
+
+        // Register new model with mlflow backend.
+        // Populates with id, modelAlias and modelUri.
+        try {
+            const res = await fetch("/api/patients", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(newPatient),
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.error);
+            } 
+
+            const data = await res.json();
+            setPatients([...patients, data.patient]);
+
+        } catch (error) {
+            console.error(error);
+        
+        } finally {
+            // Reset form state.
+            setName("");
+            setBudget(60);
+            setMaxDose(10);
+            setAge(75);
+            setWeeksSinceStroke(10);
+            setLeftStroke(true);
+            setMale(true);
+            setHorizonWeeks(10);
+
+            // Complete loading and close form.
+            setAddingLoading(false);
+            setShowForm(false);
+        }
     };
 
     return (
-        <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-2xl font-semibold mb-6">Add New Patient</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Name
+        <form onSubmit={addPatient} className="space-y-6">
+            <label htmlFor="nameInput" className="block text-sm font-medium text-[var(--foreground)]">
+                Patient ID
+            </label>
+            <input
+                type="text"
+                id="nameInput"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder={`${nextPatientId}`}
+                className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                required
+            />
+
+            {/* Budget & Max Dose */}
+            <div className="flex gap-4">
+                <div className="w-1/2">
+                    <label htmlFor="budgetInput" className="block text-sm font-medium text-[var(--foreground)]">
+                        Total Treatment Hours
                     </label>
                     <input
                         type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
+                        id="budgetInput"
+                        value={budget}
+                        onChange={(e) => setBudget(Number(e.target.value))}
+                        placeholder="60"
+                        className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
                         required
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     />
                 </div>
+                <div className="w-1/2">
+                    <label htmlFor="maxDoseInput" className="block text-sm font-medium text-[var(--foreground)]">
+                        Max Hours per Week {/* Max Dose */}
+                    </label>
+                    <input
+                        type="text"
+                        id="maxDoseInput"
+                        value={maxDose}
+                        onChange={(e) => setMaxDose(Number(e.target.value))}
+                        className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                        required
+                    />
+                </div>
+            </div>
 
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+            {/* Age & Weeks Since Stroke */}
+            <div className="flex gap-4">
+                <div className="w-1/2">
+                    <label htmlFor="ageInput" className="block text-sm font-medium text-[var(--foreground)]">
                         Age
                     </label>
                     <input
-                        type="number"
-                        name="age"
-                        value={formData.age}
-                        onChange={handleChange}
+                        type="text"
+                        id="ageInput"
+                        value={age}
+                        onChange={(e) => setAge(Number(e.target.value))}
+                        className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
                         required
-                        min="0"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     />
                 </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Weeks Since Stroke
+                <div className="w-1/2">
+                    <label htmlFor="weeksSinceStrokeInput" className="block text-sm font-medium text-[var(--foreground)]">
+                        Weeks Since Stroke at Start of Treatment
                     </label>
                     <input
-                        type="number"
-                        name="weeksSinceStroke"
-                        value={formData.weeksSinceStroke}
-                        onChange={handleChange}
+                        type="text"
+                        id="weeksSinceStrokeInput"
+                        value={weeksSinceStroke}
+                        onChange={(e) => setWeeksSinceStroke(Number(e.target.value))}
+                        className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
                         required
-                        min="0"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
                     />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Budget (hours)
-                    </label>
-                    <input
-                        type="number"
-                        name="budget"
-                        value={formData.budget}
-                        onChange={handleChange}
-                        required
-                        min="0"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Max Dose (hours)
-                    </label>
-                    <input
-                        type="number"
-                        name="maxDose"
-                        value={formData.maxDose}
-                        onChange={handleChange}
-                        required
-                        min="0"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    />
-                </div>
-
-                <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Horizon (weeks)
-                    </label>
-                    <input
-                        type="number"
-                        name="horizon"
-                        value={formData.horizon}
-                        onChange={handleChange}
-                        required
-                        min="1"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    />
-                </div>
-
-                <div className="flex items-center space-x-4">
-                    <label className="flex items-center">
-                        <input
-                            type="checkbox"
-                            name="leftStroke"
-                            checked={formData.leftStroke}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        Left Side Stroke
-                    </label>
-                </div>
-
-                <div className="flex items-center space-x-4">
-                    <label className="flex items-center">
-                        <input
-                            type="checkbox"
-                            name="male"
-                            checked={formData.male}
-                            onChange={handleChange}
-                            className="mr-2"
-                        />
-                        Male
-                    </label>
                 </div>
             </div>
 
-            <div className="mt-6 flex justify-end space-x-4">
-                <Button
-                    type="button"
-                    variant="secondary"
-                    onClick={() => setShowForm(false)}
-                >
-                    Cancel
-                </Button>
-                <Button
-                    type="submit"
-                    variant="primary"
-                >
-                    Add Patient
-                </Button>
+            {/* Stroke Type & Gender */}
+            <div className="flex gap-4">
+                <div className="w-1/2">
+                    <label className="block text-sm font-medium text-[var(--foreground)]">
+                        Side of Stroke
+                    </label>
+                    <div className="flex flex-col items-center border border-[var(--color-border)] rounded-lg shadow-sm py-2">
+                        <label className="inline-flex items-center">
+                            <input
+                                type="radio"
+                                name="strokeType"
+                                value="Left"
+                                checked={leftStroke === true}
+                                onChange={() => setLeftStroke(true)}
+                                className="form-radio text-[var(--color-primary)]"
+                                required
+                            />
+                            <span className="ml-2 text-[var(--foreground)]">Left</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                            <input
+                                type="radio"
+                                name="strokeType"
+                                value="Right"
+                                checked={leftStroke === false}
+                                onChange={() => setLeftStroke(false)}
+                                className="form-radio text-[var(--color-primary)]"
+                                required
+                            />
+                            <span className="ml-2 text-[var(--foreground)]">Right</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div className="w-1/2">
+                    <label className="block text-sm font-medium text-[var(--foreground)]">
+                        Sex at Birth
+                    </label>
+                    <div className="flex flex-col items-center border border-[var(--color-border)] rounded-lg shadow-sm  py-2">
+                        <label className="inline-flex items-center">
+                            <input
+                                type="radio"
+                                name="gender"
+                                value="Male"
+                                checked={male === true}
+                                onChange={() => setMale(true)}
+                                className="form-radio text-[var(--color-primary)]"
+                                required
+                            />
+                            <span className="ml-2 text-[var(--foreground)]">Male</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                            <input
+                                type="radio"
+                                name="gender"
+                                value="Female"
+                                checked={male === false}
+                                onChange={() => setMale(false)}
+                                className="form-radio text-[var(--color-primary)]"
+                                required
+                            />
+                            <span className="ml-2 text-[var(--foreground)]">Female</span>
+                        </label>
+                    </div>
+                </div>
             </div>
+
+            {/* Horizon */}
+            <div>
+                <label htmlFor="horizonInput" className="block text-sm font-medium text-[var(--foreground)]">
+                    Total Treatment Weeks
+                </label>
+                <input
+                    type="number"
+                    id="horizonInput"
+                    value={horizonWeeks}
+                    onChange={(e) => setHorizonWeeks(Number(e.target.value))}
+                    min={2}
+                    step={2}
+                    className="w-full px-4 py-2 border border-[var(--color-border)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+                    required
+                />
+            </div>
+
+            {/* Submit */}
+            <button
+                className="w-full px-4 py-3 mt-6 bg-[var(--color-primary)] text-white rounded-full hover:opacity-90 shadow-md"
+                type="submit"
+                disabled={addingLoading}
+            >
+                {addingLoading ? (
+                    <div className="w-6 h-6 border-4 border-white border-t-transparent rounded-full animate-spin mx-auto" />
+                ) : (
+                    <p>Add Patient</p>
+                )}
+            </button>
         </form>
     );
 }
