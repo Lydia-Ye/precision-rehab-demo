@@ -44,13 +44,32 @@ export const generateManualScheduleResults = (
   futureActions: number[],
   params: Record<string, number>[]
 ) => {
-  // Calculate the impact of each dose on the outcome
-  const calculateDoseImpact = (dose: number, param: Record<string, number>) => {
-    // Simulate a dose-response relationship
-    const baseEffect = param.alpha * dose;
-    const diminishingEffect = param.beta * Math.log(1 + dose);
-    const interactionEffect = param.gamma * dose * y_init;
-    return baseEffect + diminishingEffect + interactionEffect;
+  // Constants from the real model
+  const MAX_MAL = 5.0; // Maximum MAL score
+  const SIG_SLOPE = 0.2; // Sigmoid slope parameter
+  const SIG_OFFSET = -3; // Sigmoid offset parameter
+
+  // Helper function to convert outcome to state (mimicking the real model)
+  const outcomeToState = (y: number) => {
+    const sigmoidInput = Math.log(y / MAX_MAL) - Math.log(1 - y / MAX_MAL);
+    return (sigmoidInput - SIG_OFFSET) / SIG_SLOPE;
+  };
+
+  // Helper function to convert state to outcome (mimicking the real model)
+  const stateToOutcome = (x: number) => {
+    const sigmoid = 1 / (1 + Math.exp(-(SIG_SLOPE * x + SIG_OFFSET)));
+    return MAX_MAL * sigmoid;
+  };
+
+  // Calculate the next state based on current state, action, and parameters
+  const calculateNextState = (currentState: number, action: number, param: Record<string, number>) => {
+    const a = param.a || 0.8; // Default value if not provided
+    const b = param.b || 0.2; // Default value if not provided
+    const c = param.c || 0.1; // Default value if not provided
+    const noise = (Math.random() - 0.5) * 0.1; // Small random noise
+    
+    // State transition equation from the real model
+    return a * currentState + b * action + c * y_init + noise;
   };
 
   // Generate predictions for future outcomes
@@ -58,25 +77,25 @@ export const generateManualScheduleResults = (
     // Use the corresponding parameter set for this prediction
     const param = params[i % params.length];
     
-    // Calculate the impact of this dose
-    const impact = calculateDoseImpact(dose, param);
+    // Convert current outcome to state
+    const currentState = outcomeToState(y_init);
     
-    // Add some random variation
-    const variation = (Math.random() - 0.5) * 0.1;
+    // Calculate next state
+    const nextState = calculateNextState(currentState, dose, param);
     
-    // Calculate the new outcome
-    const newOutcome = y_init + impact + variation;
+    // Convert back to outcome
+    const nextOutcome = stateToOutcome(nextState);
     
-    // Ensure outcome stays within reasonable bounds (0 to 1)
-    return Math.max(0, Math.min(1, newOutcome));
+    // Ensure outcome stays within reasonable bounds (0 to MAX_MAL)
+    return Math.max(0, Math.min(MAX_MAL, nextOutcome));
   });
 
-  // Calculate min and max outcomes with some variance
+  // Calculate uncertainty bounds (similar to the real model's 95% confidence intervals)
   const maxOutcomes = futureOutcomes.map(outcome => 
-    Math.min(1, outcome + 0.1 + Math.random() * 0.05)
+    Math.min(MAX_MAL, outcome + 0.2 + Math.random() * 0.1)
   );
   const minOutcomes = futureOutcomes.map(outcome => 
-    Math.max(0, outcome - 0.1 - Math.random() * 0.05)
+    Math.max(0, outcome - 0.2 - Math.random() * 0.1)
   );
 
   return {
