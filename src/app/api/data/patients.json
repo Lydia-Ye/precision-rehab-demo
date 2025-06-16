@@ -512,11 +512,11 @@
     "id": "11",
     "modelBayesian": {
       "modelAlias": "11_Patient_11_bayes_version_8",
-      "modelUri": "runs:/1a5688483fd34e16b41dedfb6ecbee37/mal_planner_model"
+      "modelUri": "mock://models/bayesian/11-8"
     },
     "modelSGLD": {
       "modelAlias": "11_Patient_11_SGLD_version_1",
-      "modelUri": "runs:/b0d74ae5a4314485a40b33ca57cbfc47/mal_planner_model"
+      "modelUri": "mock://models/sgld/11-1"
     }
   },
   {
@@ -544,11 +544,11 @@
     "id": "12",
     "modelBayesian": {
       "modelAlias": "12_Patient_12_bayes_version_11",
-      "modelUri": "runs:/eac6366655474dfb80720af6815d602e/mal_planner_model"
+      "modelUri": "mock://models/bayesian/12-11"
     },
     "modelSGLD": {
       "modelAlias": "12_Patient_12_SGLD_version_1",
-      "modelUri": "runs:/524e518c45564e2da639e7c236190144/mal_planner_model"
+      "modelUri": "mock://models/sgld/12-1"
     }
   },
   {
@@ -576,11 +576,11 @@
     "id": "13",
     "modelBayesian": {
       "modelAlias": "13_Patient_13_bayes_version_8",
-      "modelUri": "runs:/37ce4d22b14b4671ab4ceb6624646a13/mal_planner_model"
+      "modelUri": "mock://models/bayesian/13-8"
     },
     "modelSGLD": {
       "modelAlias": "13_Patient_13_SGLD_version_1",
-      "modelUri": "runs:/ae7946943fc74b5082bbaf0cc5ec5bef/mal_planner_model"
+      "modelUri": "mock://models/sgld/13-1"
     }
   },
   {
@@ -608,11 +608,11 @@
     "id": "14",
     "modelBayesian": {
       "modelAlias": "14_Patient_14_bayes_version_7",
-      "modelUri": "runs:/d91c1ee791c847e7b5d23edca211f3f1/mal_planner_model"
+      "modelUri": "mock://models/bayesian/14-7"
     },
     "modelSGLD": {
       "modelAlias": "14_Patient_14_SGLD_version_1",
-      "modelUri": "runs:/5eeec77e108845bca85803b5f8679838/mal_planner_model"
+      "modelUri": "mock://models/sgld/14-1"
     }
   },
   {
@@ -630,11 +630,11 @@
     "id": "15",
     "modelBayesian": {
       "modelAlias": "15_Patient_15_bayes_version_1",
-      "modelUri": "runs:/c148d47bb39f4f7c9fe561e762445596/mal_planner_model"
+      "modelUri": "mock://models/bayesian/15-1"
     },
     "modelSGLD": {
       "modelAlias": "15_Patient_15_SGLD_version_1",
-      "modelUri": "runs:/f4c00838f41e453db34e2de86224c5bb/mal_planner_model"
+      "modelUri": "mock://models/sgld/15-1"
     }
   },
   {
@@ -660,11 +660,11 @@
     "id": "16",
     "modelBayesian": {
       "modelAlias": "16_Patient_16_bayes_version_3",
-      "modelUri": "runs:/ce9e1adc36cd400883fb3e9b0f022ea5/mal_planner_model"
+      "modelUri": "mock://models/bayesian/16-3"
     },
     "modelSGLD": {
       "modelAlias": "16_Patient_16_SGLD_version_1",
-      "modelUri": "runs:/1c838c0b79634f84954e216335cabced/mal_planner_model"
+      "modelUri": "mock://models/sgld/16-1"
     }
   },
   {
@@ -690,11 +690,121 @@
     "id": "17",
     "modelBayesian": {
       "modelAlias": "17_Patient_17_bayes_version_4",
-      "modelUri": "runs:/87a8c2352c044b78a2e929e51ee5272e/mal_planner_model"
+      "modelUri": "mock://models/bayesian/17-4"
     },
     "modelSGLD": {
       "modelAlias": "17_Patient_17_SGLD_version_1",
-      "modelUri": "runs:/191f5d7d915346ea92896af9cd8dee38/mal_planner_model"
+      "modelUri": "mock://models/sgld/17-1"
+    }
+  },
+  {
+    "id": "18",
+    "name": "Patient 18",
+    "budget": 40,
+    "maxDose": 300,
+    "age": 65,
+    "weeksSinceStroke": 4,
+    "leftStroke": true,
+    "male": true,
+    "horizon": 12,
+    "past": false,
+    "outcomes": [0.2, 0.3, 0.4, 0.5],
+    "actions": [120, 150, 180, 200],
+    "modelBayesian": {
+      "modelAlias": "18_Patient_18_bayes_version_8",
+      "modelUri": "mock://models/bayesian/18-8"
+    },
+    "modelSGLD": {
+      "modelAlias": "18_Patient_18_SGLD_version_1",
+      "modelUri": "mock://models/sgld/18-1"
+    }
+  },
+  {
+    "id": "19",
+    "name": "Patient 19",
+    "budget": 35,
+    "maxDose": 250,
+    "age": 58,
+    "weeksSinceStroke": 6,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 12,
+    "past": false,
+    "outcomes": [0.15, 0.25, 0.35, 0.45],
+    "actions": [100, 130, 160, 180],
+    "modelBayesian": {
+      "modelAlias": "19_Patient_19_bayes_version_1",
+      "modelUri": "mock://models/bayesian/19-1"
+    },
+    "modelSGLD": {
+      "modelAlias": "19_Patient_19_SGLD_version_1",
+      "modelUri": "mock://models/sgld/19-1"
+    }
+  },
+  {
+    "id": "20",
+    "name": "Patient 20",
+    "budget": 45,
+    "maxDose": 350,
+    "age": 72,
+    "weeksSinceStroke": 8,
+    "leftStroke": true,
+    "male": true,
+    "horizon": 12,
+    "past": true,
+    "outcomes": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
+    "actions": [150, 180, 200, 220, 250, 280],
+    "modelBayesian": {
+      "modelAlias": "20_Patient_20_bayes_version_1",
+      "modelUri": "mock://models/bayesian/20-1"
+    },
+    "modelSGLD": {
+      "modelAlias": "20_Patient_20_SGLD_version_1",
+      "modelUri": "mock://models/sgld/20-1"
+    }
+  },
+  {
+    "id": "21",
+    "name": "Patient 21",
+    "budget": 30,
+    "maxDose": 200,
+    "age": 45,
+    "weeksSinceStroke": 3,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 12,
+    "past": false,
+    "outcomes": [0.25, 0.35, 0.45],
+    "actions": [80, 100, 120],
+    "modelBayesian": {
+      "modelAlias": "21_Patient_21_bayes_version_1",
+      "modelUri": "mock://models/bayesian/21-1"
+    },
+    "modelSGLD": {
+      "modelAlias": "21_Patient_21_SGLD_version_1",
+      "modelUri": "mock://models/sgld/21-1"
+    }
+  },
+  {
+    "id": "22",
+    "name": "Patient 22",
+    "budget": 50,
+    "maxDose": 400,
+    "age": 68,
+    "weeksSinceStroke": 10,
+    "leftStroke": true,
+    "male": true,
+    "horizon": 12,
+    "past": true,
+    "outcomes": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],
+    "actions": [200, 250, 300, 320, 350, 380, 400],
+    "modelBayesian": {
+      "modelAlias": "22_Patient_22_bayes_version_1",
+      "modelUri": "mock://models/bayesian/22-1"
+    },
+    "modelSGLD": {
+      "modelAlias": "22_Patient_22_SGLD_version_1",
+      "modelUri": "mock://models/sgld/22-1"
     }
   }
 ]
