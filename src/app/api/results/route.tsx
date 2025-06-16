@@ -6,6 +6,8 @@ import { Patient } from "@/types/patient";
 import { ResultsPostRequest } from "@/types/resultsPostRequest";
 import { ResultsPostResponse } from "@/types/resultsPostResponse";
 import { ResultsPutRequest } from "@/types/resultsPutRequest";
+import { mockResults } from "@/mock/results";
+import { generatePredictionResults } from "@/mock/resultsGenerator";
 
 const filePath = path.join(process.cwd(), "src/app/api/data/patients.json");
 
@@ -16,21 +18,20 @@ export async function POST(req: Request) {
 
     // Format request params.
     const params = {
+      patientId: data.id,
       alias: data.alias,
       budget: data.budget,
       horizon: data.horizon,
-      sgld: data.sgld,
       y_init: data.y_init, 
     };
 
-    // Make request to mlflow model.
-    const modelResponse = await fetch("http://localhost:5001/api/results", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(params),
-    });
-    if (!modelResponse.ok) throw new Error("Failed to obtain results");
-    const results = await modelResponse.json();
+    // Get mock results - either from predefined data or generate new ones
+    let results = mockResults[params.patientId];
+    if (!results) {
+      results = generatePredictionResults(params.patientId, params.budget, params.horizon, params.y_init);
+      // Store the generated results for future use
+      mockResults[params.patientId] = results;
+    }
 
     // Return results.
     const response: ResultsPostResponse = {
