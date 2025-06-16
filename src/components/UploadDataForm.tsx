@@ -105,7 +105,7 @@ export default function UploadDataForm({ patientID, pastAvgOut, pastDoseData, se
     const updateOutcomeState = (index: number, newOutcome: string) => {
         const numValue = Number(newOutcome);
         if (isNaN(numValue)) {
-            setValidationError("Please enter a valid number for MAL");
+            setValidationError("Please enter a valid number for MAL Score");
             return;
         }
         setValidationError(null);
@@ -125,7 +125,7 @@ export default function UploadDataForm({ patientID, pastAvgOut, pastDoseData, se
         } else {
             const numValue = Number(newDose);
             if (isNaN(numValue)) {
-                setValidationError("Please enter a valid number for dose");
+                setValidationError("Please enter a valid number for Treatment Hours");
                 return;
             }
             newDoseState[index] = numValue;
@@ -356,9 +356,9 @@ export default function UploadDataForm({ patientID, pastAvgOut, pastDoseData, se
                     <>
                         <div className="overflow-x-auto max-h-96 overflow-y-auto rounded-lg">
                             <div className="grid grid-cols-4 gap-2 px-2 py-2 bg-gray-50 rounded-t-lg border-b border-gray-200 sticky top-0 z-10">
-                                <div className="font-semibold">Week</div>
-                                <div className="font-semibold">MAL</div>
-                                <div className="font-semibold">Dose (Hours)</div>
+                                <div className="font-semibold">Treatment Week</div>
+                                <div className="font-semibold">MAL Score</div>
+                                <div className="font-semibold">Treatment Hours</div>
                             </div>
                             <div className="divide-y divide-gray-100">
                                 {pastDoseDataState.map((value, i) => (
@@ -377,6 +377,7 @@ export default function UploadDataForm({ patientID, pastAvgOut, pastDoseData, se
                                                     onChange={(e) => updateOutcomeState(i, e.target.value)}
                                                     className="px-3 py-2 border rounded w-full"
                                                     required
+                                                    aria-label="MAL Score"
                                                 />
                                             ) : (
                                                 <div className="px-3 py-2 bg-gray-50 rounded w-full border border-transparent">{pastAvgOutState[i]}</div>
@@ -391,6 +392,7 @@ export default function UploadDataForm({ patientID, pastAvgOut, pastDoseData, se
                                                     onChange={(e) => updateDoseState(i, e.target.value)}
                                                     className={`px-3 py-2 border rounded w-full ${i === pastDoseDataState.length - 1 ? "bg-gray-200 text-gray-500 cursor-not-allowed" : ""}`}
                                                     disabled={i === pastDoseDataState.length - 1}
+                                                    aria-label="Treatment Hours"
                                                 />
                                             ) : (
                                                 <div className="px-3 py-2 bg-gray-50 rounded w-full border border-transparent">{pastDoseDataStateInputs[i]}</div>

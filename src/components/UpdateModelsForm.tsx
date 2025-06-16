@@ -8,6 +8,7 @@ interface UpdateModelsFormProps {
     updateModels: (newMaxDose: number, sgld: boolean) => Promise<void>;
     updateModelTimestamp: () => void;
     patientId: string;
+    setShowModelInfo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function formatDateTime(dateString: string) {
@@ -15,7 +16,7 @@ function formatDateTime(dateString: string) {
     return date.toLocaleString();
 }
 
-export default function UpdateModelsForm({ setShowForm, updateModels, updateModelTimestamp, patientId }: UpdateModelsFormProps) {
+export default function UpdateModelsForm({ setShowForm, updateModels, updateModelTimestamp, patientId, setShowModelInfo }: UpdateModelsFormProps) {
     // Form state for editing patient.
     const [maxDose, setMaxDose] = useState(20);
     
@@ -92,8 +93,7 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
         <form className="mb-4 space-y-6 min-w-[380px] max-w-md">
             {/* Header */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
-                <h2 className="text-2xl font-bold">Prediction Model</h2>
-                
+                <h2 className="text-2xl font-bold">Treatment Model</h2>
          
                 <Button
                     type="button"
@@ -109,6 +109,13 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
                 <p>
                     The model learns from each observed dose and outcome, updating its predictions using Bayesian reinforcement learning to support personalized rehabilitation planning.
                 </p>
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setShowModelInfo(true)}
+                    >
+                        Current Model Details
+                    </Button>
 
                 {lastUpdate && (
                     <p className="mt-2 text-green-700 font-medium">Last model update: {formatDateTime(lastUpdate)}</p>
@@ -130,7 +137,7 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
                         Updating...
                     </span>
                 ) : (
-                    <>Update Prediction Model</>
+                    <>Update Treatment Model</>
                 )}
             </Button>
 

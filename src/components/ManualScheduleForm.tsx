@@ -172,9 +172,9 @@ export default function ManualScheduleForm({
 
       <div className="overflow-x-auto max-h-96 overflow-y-auto rounded-lg">
         <div className="grid grid-cols-4 gap-2 px-2 py-2 bg-gray-50 rounded-t-lg border-b border-gray-200 sticky top-0 z-10">
-          <div className="font-semibold">Week</div>
-          <div className="font-semibold">MAL</div>
-          <div className="font-semibold">Dose (Hours)</div>
+          <div className="font-semibold">TreatmentWeek</div>
+          <div className="font-semibold">MAL Score</div>
+          <div className="font-semibold">Treatment Hours</div>
           <div className="font-semibold">Status</div>
         </div>
         <div className="divide-y divide-gray-100">

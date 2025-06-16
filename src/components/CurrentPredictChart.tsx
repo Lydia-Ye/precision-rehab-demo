@@ -35,7 +35,7 @@ const options: ChartOptions<"line" | "bar"> = {
       display: true,
       title: {
         display: true,
-        text: "Weeks"
+        text: "Treatment Week"
       }
     },
     "y-left": {
@@ -44,7 +44,7 @@ const options: ChartOptions<"line" | "bar"> = {
       position: "left",
       title: {
         display: true,
-        text: "MAL",
+        text: "MAL Score",
       },
       min: 0,
       max: 5
@@ -55,7 +55,7 @@ const options: ChartOptions<"line" | "bar"> = {
       position: "right",
       title: {
         display: true,
-        text: "Dose (Hours)",
+        text: "Treatment Hours",
       },
       min: 0,
       max: 30,
@@ -175,7 +175,7 @@ export default function CurrentPredictChart({
         },
         {
           type: "line" as const,
-          label: "Recommended Schedule Min",
+          label: "Recommended Schedule Min Outcome",
           backgroundColor: "rgba(255, 170, 0, 0.2)",
           borderColor: "rgba(255, 170, 0, 0)",
           pointRadius: 0,

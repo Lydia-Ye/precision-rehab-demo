@@ -24,11 +24,11 @@ export default function PastPatientPage({ patient }: PatientPageProps) {
   const hasPreviousPatient = currentPatientIndex > 0;
 
   const chartData = {
-    labels: patient.outcomes.map((_, index) => `Week ${index + 1}`),
+    labels: patient.outcomes.map((_, index) => `Treatment Week ${index + 1}`),
     datasets: [
       {
         type: "line" as const,
-        label: "Observed MAL",
+        label: "Observed MAL Score",
         backgroundColor: "rgb(65, 105, 225)",
         borderColor: "rgb(65, 105, 225)",
         pointRadius: 0,
@@ -39,7 +39,7 @@ export default function PastPatientPage({ patient }: PatientPageProps) {
       },
       {
         type: "bar" as const,
-        label: "Dose (hours)",
+        label: "Treatment Hours",
         backgroundColor: "rgb(58, 218, 55)",
         borderColor: "white",
         yAxisID: "y-right",
@@ -64,7 +64,7 @@ export default function PastPatientPage({ patient }: PatientPageProps) {
         </div>
 
         <div className="text-sm text-gray-600 space-y-3">
-          <p><strong>Total Dose Administered:</strong> {totalDose} hours</p>
+          <p><strong>Total Treatment Hours:</strong> {totalDose} hours</p>
           <p><strong>Final MAL Score:</strong> {finalMAL}</p>
         </div>
 
@@ -82,7 +82,7 @@ export default function PastPatientPage({ patient }: PatientPageProps) {
         <div>
           <h3 className="text-xl font-semibold mt-8 mb-2">Treatment Timeline</h3>
           <p className="text-sm text-gray-600 mb-4">
-            <strong>Total Treatment Horizon:</strong> {horizon} weeks
+            <strong>Total Treatment Weeks:</strong> {horizon} treatment weeks
           </p>
           <PredictChart data={chartData} />
         </div>

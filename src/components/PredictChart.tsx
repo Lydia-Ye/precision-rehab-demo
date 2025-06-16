@@ -36,7 +36,7 @@ const options: ChartOptions<"line" | "bar"> = {
       display: true,
       title: {
         display: true,
-        text: "Weeks"
+        text: "Treatment Week"
       }
     },
     "y-left": {
@@ -45,7 +45,7 @@ const options: ChartOptions<"line" | "bar"> = {
       position: "left",
       title: {
         display: true,
-        text: "MAL",
+        text: "MAL Score",
       },
       min: 0,
       max: 5
@@ -56,7 +56,7 @@ const options: ChartOptions<"line" | "bar"> = {
       position: "right",
       title: {
         display: true,
-        text: "Dose (Hours)",
+        text: "Treatment Hours",
       },
       min: 0,
       max: 30,

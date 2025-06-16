@@ -122,7 +122,7 @@ export default function PatientEditForm({ patient, setPatient, setShowForm, upda
 
     return (
         <form onSubmit={onSubmit} className="space-y-6 relative">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+            <div className="flex flex-col sm:flex-row sm:justify-between mb-6 gap-4">
                 <h2 className="text-2xl font-bold">Edit Patient Info</h2>
                 <div className="flex gap-2 ml-auto">
                     {!isEditing ? (
@@ -182,8 +182,8 @@ export default function PatientEditForm({ patient, setPatient, setShowForm, upda
                 {/* Budget & Max Dose */}
                 <div className="flex gap-4">
                     <div className="w-1/2">
-                        <label htmlFor="budgetInput" className="block text-sm font-medium text-[var(--foreground)]">
-                            Total Hours
+                        <label htmlFor="budgetInput" className="block text-sm font-medium text-[var(--foreground)] text-left">
+                            Total Treatment Hours
                         </label>
                         {isEditing ? (
                             <input
@@ -200,7 +200,7 @@ export default function PatientEditForm({ patient, setPatient, setShowForm, upda
                         )}
                     </div>
                     <div className="w-1/2">
-                        <label htmlFor="maxDoseInput" className="block text-sm font-medium text-[var(--foreground)]">
+                        <label htmlFor="maxDoseInput" className="block text-sm font-medium text-[var(--foreground)] text-left">
                             Max Hours per Week
                         </label>
                         {isEditing ? (
@@ -221,7 +221,7 @@ export default function PatientEditForm({ patient, setPatient, setShowForm, upda
                 {/* Age & Weeks Since Stroke */}
                 <div className="flex gap-4">
                     <div className="w-1/2">
-                        <label htmlFor="ageInput" className="block text-sm font-medium text-[var(--foreground)]">
+                        <label htmlFor="ageInput" className="block text-sm font-medium text-[var(--foreground)] text-left">
                             Age
                         </label>
                         {isEditing ? (
@@ -238,8 +238,8 @@ export default function PatientEditForm({ patient, setPatient, setShowForm, upda
                         )}
                     </div>
                     <div className="w-1/2">
-                        <label htmlFor="weeksSinceStrokeInput" className="block text-sm font-medium text-[var(--foreground)]">
-                            Weeks Since Stroke
+                        <label htmlFor="weeksSinceStrokeInput" className="block text-sm font-medium text-[var(--foreground)] text-left">
+                            Weeks Since Stroke at Start of Treatment
                         </label>
                         {isEditing ? (
                             <input
@@ -259,7 +259,7 @@ export default function PatientEditForm({ patient, setPatient, setShowForm, upda
                 {/* Stroke Type & Gender */}
                 <div className="flex gap-4">
                     <div className="w-1/2">
-                        <label className="block text-sm font-medium text-[var(--foreground)]">
+                        <label className="block text-sm font-medium text-[var(--foreground)] text-left">
                             Side of Stroke
                         </label>
                         {isEditing ? (
@@ -295,7 +295,7 @@ export default function PatientEditForm({ patient, setPatient, setShowForm, upda
                     </div>
 
                     <div className="w-1/2">
-                        <label className="block text-sm font-medium text-[var(--foreground)]">
+                        <label className="block text-sm font-medium text-[var(--foreground)] text-left">
                             Sex at Birth
                         </label>
                         {isEditing ? (
@@ -333,8 +333,8 @@ export default function PatientEditForm({ patient, setPatient, setShowForm, upda
 
                 {/* Horizon */}
                 <div>
-                    <label htmlFor="horizonInput" className="block text-sm font-medium text-[var(--foreground)]">
-                        Horizon (weeks)
+                    <label htmlFor="horizonInput" className="block text-sm font-medium text-[var(--foreground)] text-left">
+                        Total Treatment Weeks
                     </label>
                     {isEditing ? (
                         <input

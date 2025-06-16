@@ -9,6 +9,7 @@ import UploadDataForm from "@/components/UploadDataForm";
 import ModelInfoOverlay from "@/components/ModelInfoOverlay";
 import PatientEditForm from "@/components/PatientEditForm";
 import ManualScheduleForm from "@/components/ManualScheduleForm";
+import PredictionSummary from "@/components/PredictionSummary";
 
 import { Patient } from "@/types/patient";
 import { ResultsPostRequest } from "@/types/resultsPostRequest";
@@ -333,6 +334,7 @@ useEffect(() => {
               updateModels={updateModels}
               updateModelTimestamp={updateModelTimestamp}
               patientId={patient.id}
+              setShowModelInfo={setShowModelInfo}
             />
           </div>
         </div>
@@ -406,11 +408,12 @@ useEffect(() => {
             <Badge variant="active">ACTIVE</Badge>
           </div>
 
-          {/* <div className="text-sm text-gray-600 space-y-3">
-            <p><strong>Treatment Horizon:</strong> {patient.horizon * 2} weeks</p>
-            <p><strong>Total Dose Administered:</strong> {totalDose} hours</p>
+          <div className="text-sm text-gray-600 space-y-3">
+            <p><strong>Total Treatment Weeks:</strong> {patient.horizon * 2} weeks</p>
+            <p><strong>Total Treatment Hours:</strong> {totalDose} hours</p>
+            <p><strong>Remaining Treatment Hours:</strong> {patient.budget - totalDose} hours</p>
             <p><strong>Latest observed MAL Score:</strong> {currentMAL}</p>
-          </div> */}
+          </div>
 
           <div className="space-y-4">
             <Button
@@ -450,64 +453,101 @@ useEffect(() => {
           </div>
 
           <div className="mt-6 space-y-3">
-            <h2 className="text-xl font-bold text-blue-600 mb-2">
-              Predict Recovery Outcomes
-            </h2>
-            <p className="text-sm text-gray-500">
-              Select a schedule type to simulate how the patient may recover under different treatment plans. 
-            </p>
+            <div className="flex items-center gap-2">
+              <h2 className="text-xl font-bold text-blue-600 mb-2">
+                Predict Recovery Outcomes
+              </h2>
+              <div className="relative group">
+                <span className="text-gray-400 cursor-help">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </span>
+                <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 w-64 p-2 bg-[var(--foreground)]/50 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 pointer-events-none">
+                  The model uses Bayesian reinforcement learning to predict recovery outcomes based on treatment schedules and patient data.
+                </div>
+              </div>
+            </div>
 
             {!hasPastData && (
               <div className="text-xs text-red-500 mb-2">Please upload patient data before predicting outcomes.</div>
             )}
-            <label className="inline-flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={selectedModels.bayesian}
-                onChange={(e) => {
-                  if (!hasPastData) return;
-                  setSelectedModels(prev => ({ ...prev, bayesian: e.target.checked }));
-                  if (e.target.checked) {
-                    getResults(false);
-                  } else {
-                    setBayesianPrediction({
-                      maxOut: [],
-                      futureAvgOut: [],
-                      minOut: [],
-                      futureDoseData: []
-                    });
-                  }
-                }}
-                className="form-checkbox text-green-600"
-                disabled={!hasPastData}
-              />
-              <span className="text-sm text-gray-700">Recommended Schedule</span>
-            </label>
-            <br />
-            
-            <label className="inline-flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={selectedModels.manual}
-                onChange={(e) => {
-                  if (!hasPastData) return;
-                  setSelectedModels(prev => ({ ...prev, manual: e.target.checked }));
-                  if (e.target.checked) {
-                    plotManual();
-                  } else {
-                    setManualPrediction({
-                      maxOut: [],
-                      futureAvgOut: [],
-                      minOut: [],
-                      futureDoseData: []
-                    });
-                  }
-                }}
-                className="form-checkbox text-green-600"
-                disabled={!hasPastData}
-              />
-              <span className="text-sm text-gray-700">Manual Schedule</span>
-            </label>
+            <div className="space-y-2">
+              <label className="inline-flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedModels.bayesian}
+                  onChange={(e) => {
+                    if (!hasPastData) return;
+                    setSelectedModels(prev => ({ ...prev, bayesian: e.target.checked }));
+                    if (e.target.checked) {
+                      getResults(false);
+                    } else {
+                      setBayesianPrediction({
+                        maxOut: [],
+                        futureAvgOut: [],
+                        minOut: [],
+                        futureDoseData: []
+                      });
+                    }
+                  }}
+                  className="form-checkbox text-green-600"
+                  disabled={!hasPastData}
+                />
+                <span className="text-sm text-gray-700">Recommended Schedule</span>
+                <div className="relative group">
+                  <span className="text-gray-400 cursor-help">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </span>
+                  <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 w-64 p-2 bg-[var(--foreground)]/50 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 pointer-events-none">
+                    AI-recommended treatment schedule optimized for maximum recovery potential.
+                  </div>
+                </div>
+              </label>
+              <br />
+              
+              <label className="inline-flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={selectedModels.manual}
+                  onChange={(e) => {
+                    if (!hasPastData) return;
+                    setSelectedModels(prev => ({ ...prev, manual: e.target.checked }));
+                    if (e.target.checked) {
+                      plotManual();
+                    } else {
+                      setManualPrediction({
+                        maxOut: [],
+                        futureAvgOut: [],
+                        minOut: [],
+                        futureDoseData: []
+                      });
+                    }
+                  }}
+                  className="form-checkbox text-green-600"
+                  disabled={!hasPastData}
+                />
+                <span className="text-sm text-gray-700">Manual Schedule</span>
+                <div className="relative group">
+                  <span className="text-gray-400 cursor-help">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="16" x2="12" y2="12"></line>
+                      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                  </span>
+                  <div className="absolute left-full top-1/2 transform -translate-y-1/2 ml-2 w-64 p-2 bg-[var(--foreground)]/50 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 pointer-events-none">
+                    Create and test your own custom treatment schedule.
+                  </div>
+                </div>
+              </label>
+            </div>
           </div>
 
           <Button
@@ -537,17 +577,7 @@ useEffect(() => {
 
         {/* Right Column: Chart */}
         <div className='w-full'>
-          <div className="flex justify-end mt-4">
-            <Button
-              variant="outline"
-              onClick={() => setShowModelInfo(true)}
-            >
-              <p>Prediction Model Details</p>
-            </Button>
-          </div>
-
           <h3 className="text-xl font-semibold mb-2">Treatment Timeline</h3>
-          <p className="text-sm text-gray-600 mb-4"><strong>Total Treatment Horizon:</strong> {patient.horizon * 2} weeks</p>
           <CurrentPredictChart
             pastAvgOut={pastAvgOut}
             pastDoseData={pastDoseData}
@@ -557,6 +587,11 @@ useEffect(() => {
             horizon={patient.horizon}
           />
 
+          <PredictionSummary
+            pastAvgOut={pastAvgOut}
+            bayesianPrediction={bayesianPrediction}
+            manualPrediction={manualPrediction}
+          />
 
           {/* Navigation Buttons */}
           <div className="flex justify-between items-center">
