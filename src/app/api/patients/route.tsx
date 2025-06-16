@@ -5,7 +5,7 @@ import path from "path";
 import { Patient } from "@/types/patient";
 import { PatientsPostRequest } from "@/types/patientsPostRoute";
 import { PatientsPutRequest } from "@/types/patientsPutRequest";
-import { mockModelParams } from "@/mock/modelParamsData";
+import { mockModelParams } from "@/mock/modelParams";
 
 const filePath = path.join(process.cwd(), "src/app/api/data/patients.json");
 

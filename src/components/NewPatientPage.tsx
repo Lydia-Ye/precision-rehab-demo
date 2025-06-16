@@ -17,7 +17,7 @@ import { ResultsPostResponse } from "@/types/resultsPostResponse";
 import { PatientsPutRequest } from "@/types/patientsPutRequest";
 import Button from "./ui/Button";
 import Badge from "./ui/Badge";
-import { mockModelParams } from '@/mock/modelParamsData';
+import { mockModelParams } from '@/mock/modelParams';
 
 interface PatientPageProps {
   patient: Patient;
