@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Precision Rehabilitation App (Demo version)
 
-## Getting Started
+**AI-based Personalized Rehabilitation Planning for Stroke Recovery - Frontend Demo Version**
 
-First, run the development server:
+This is a frontend-only demo version of the original precision rehabilitation system. The original system implements a precision rehabilitation platform designed to **optimize neurorehabilitation treatment plans using contextual model-based reinforcement learning (RL)**. It combines real-world patient data, hierarchical Bayesian models, and reinforcement learning to simulate, personalize, and adapt treatment schedules in a data-driven manner.
+
+This demo version provides a standalone frontend interface that simulates the full-stack application's functionality using mock data, allowing users to explore and understand the system's capabilities without requiring the backend infrastructure.
+
+---
+
+## Background
+
+This demo is based on the research paper:
+
+> **"Towards AI-based Precision Neurorehabilitation via Contextual Model-based Reinforcement Learning"**  
+> *(Schweighofer, Ye, Luo, Winstein et al., 2023 – JNER, minor revision)*
+
+### Key Features:
+- Simulates the original system's functionality with mock data
+- Provides the same user interface and visualization capabilities
+- Demonstrates treatment planning and recovery trajectory visualization
+- No backend dependencies required
+
+The original system was validated on **DOSE** and **EXCITE** datasets using **MAL (Motor Activity Log)** as the outcome metric.
+
+---
+
+## App Overview
+
+This demo version focuses on the frontend component:
+
+| Module   | Description |
+|----------|-------------|
+| **Frontend (Next.js)** | A standalone demo that simulates the full-stack application's functionality using mock data. Provides the same user interface for interacting with patient data, simulating schedules, and visualizing recovery trajectories. |
+
+---
+
+## Installation
+
+### Frontend (Next.js)
 
 ```bash
+cd health-app
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This starts the frontend on `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Original System Architecture
 
-## Learn More
+The original full-stack application consisted of:
 
-To learn more about Next.js, take a look at the following resources:
+| Module   | Description |
+|----------|-------------|
+| **Backend (Flask)** | Hosted patient models and MLFlow-tracked reinforcement learning agents. |
+| **Frontend (Next.js)** | Allowed clinicians and researchers to interact with patient data, simulate schedules, and visualize recovery trajectories. |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+The backend components (Flask + MLFlow) are not included in this demo version.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📖 References
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* Schweighofer et al., 2023. *JNER*.
+* Winstein et al., 2019. *DOSE Study*.
+* Wolf et al., 2008. *EXCITE Trial*.
+* Osband et al., 2013. *Posterior Sampling for RL*.
+* Tang et al., 2023. *Posterior Sampling for POMDPs*.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
