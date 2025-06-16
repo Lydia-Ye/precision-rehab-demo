@@ -39,7 +39,7 @@ export default function PatientPage({ params }: PatientPageProps) {
         console.error("Error loading patients:", error);
         setLoading(false);
       });
-  }, []);
+  }, [id]);
 
   return (
     <div>

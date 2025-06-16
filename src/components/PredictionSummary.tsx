@@ -16,7 +16,7 @@ interface PredictionSummaryProps {
 function to3dp(val: number | null | undefined): string {
   if (val === null || val === undefined || isNaN(val)) return "-";
   const str = String(val);
-  const [intPart, decPart] = str.split(".");
+  const [, decPart] = str.split(".");
   if (decPart && decPart.length > 3) {
     return Number(val).toFixed(3);
   }
@@ -32,27 +32,21 @@ const PredictionSummary: React.FC<PredictionSummaryProps> = ({ pastAvgOut, bayes
   const bayesianHours = hasBayesian ? to3dp(bayesianPrediction.futureDoseData[0]) : null;
   const manualHours = hasManual ? to3dp(manualPrediction.futureDoseData[0]) : null;
 
-  let summarySentences: React.ReactNode[] = [];
-
-  if (hasBayesian) {
-    summarySentences.push(
+  const summarySentences = [
+    hasBayesian && (
       <span key="bayesian">
         For the next treatment week (<span>week {nextWeek}</span>), the <span className="font-bold">recommended schedule</span> suggests administering <span className="text-[var(--color-primary)] font-bold">{bayesianHours} treatment hours</span>, with an expected <span className="text-[var(--color-primary)] font-bold">{bayesianMal} MAL score</span>.
       </span>
-    );
-  }
-  if (hasManual) {
-    summarySentences.push(
+    ),
+    hasManual && (
       <span key="manual">
         For the next treatment week (<span>week {nextWeek}</span>), the <span className="font-bold">manual schedule</span> plans for <span className="text-[var(--color-primary)] font-bold">{manualHours} treatment hours</span>, with an expected <span className="text-[var(--color-primary)] font-bold">{manualMal} MAL score</span>.
       </span>
-    );
-  }
-  if (!hasBayesian && !hasManual) {
-    summarySentences.push(
+    ),
+    !hasBayesian && !hasManual && (
       <span key="none">Select a schedule above to see actionable recommendations for the next treatment week.</span>
-    );
-  }
+    )
+  ];
 
   return (
     <div className="my-6 bg-[var(--color-accent)]/10 rounded-lg p-4 shadow-sm">

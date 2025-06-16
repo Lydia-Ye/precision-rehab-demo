@@ -1,5 +1,5 @@
 export interface ResultsPostRequest {
-    id: any;
+    id: string | number;
     alias: string;
     budget: number;
     horizon: number;

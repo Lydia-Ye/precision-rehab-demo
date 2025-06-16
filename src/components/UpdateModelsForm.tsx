@@ -17,9 +17,6 @@ function formatDateTime(dateString: string) {
 }
 
 export default function UpdateModelsForm({ setShowForm, updateModels, updateModelTimestamp, patientId, setShowModelInfo }: UpdateModelsFormProps) {
-    // Form state for editing patient.
-    const [maxDose, setMaxDose] = useState(20);
-    
     // Loading for updating patient models.
     const [updateLoading, setUpdateLoading] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -27,18 +24,20 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
     const [lastUpdate, setLastUpdate] = useState<string | null>(null);
 
     // Dropdown state.
-    const [dropdownOpen, setDropdownOpen] = useState(false);
     const dropdownRef = useRef<HTMLDivElement>(null);
 
+    const MAX_DOSE = 20;
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        // setDropdownOpen(false);
+      }
+    };
+
     useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-          if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-            setDropdownOpen(false);
-          }
-        };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
-      }, []);
+    }, []);
 
     useEffect(() => {
         let interval: NodeJS.Timeout | null = null;
@@ -76,7 +75,7 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
         setUpdateLoading(true);
         setStatusMessage("Updating prediction model...");
         try {
-            await updateModels(maxDose, sgld);
+            await updateModels(MAX_DOSE, sgld);
             updateModelTimestamp();
             const now = new Date().toISOString();
             setLastUpdate(now);

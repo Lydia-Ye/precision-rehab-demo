@@ -3,6 +3,4 @@ export interface PatientinfoPutRequest {
     newHorizon: number;
 }
 
-export interface PatientinfoPutResponse {
-
-}
+export type PatientInfoRouteResponse = object;

@@ -28,7 +28,14 @@ export async function POST(req: Request) {
     // Get mock results - either from predefined data or generate new ones
     let results = mockResults[params.patientId];
     if (!results) {
-      results = generatePredictionResults(params.patientId, params.budget, params.horizon, params.y_init);
+      // Use a default value of 0 if y_init is undefined
+      const yInit = params.y_init ?? 0;
+      results = generatePredictionResults(
+        String(params.patientId),
+        params.budget,
+        params.horizon,
+        yInit
+      );
       // Store the generated results for future use
       mockResults[params.patientId] = results;
     }

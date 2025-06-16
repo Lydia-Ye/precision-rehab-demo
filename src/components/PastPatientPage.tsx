@@ -69,7 +69,7 @@ export default function PastPatientPage({ patient }: PatientPageProps) {
         </div>
 
         <div className="border-t border-[var(--color-border)] pt-4 space-y-2 text-sm text-gray-500">
-          <p>This patient's rehabilitation data was observed and recorded over the course of treatment.</p>
+          <p>This patient&apos;s rehabilitation data was observed and recorded over the course of treatment.</p>
         </div>
 
         <Link href="/patient">

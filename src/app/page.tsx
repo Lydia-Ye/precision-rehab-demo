@@ -2,7 +2,6 @@
 
 import Button from "@/components/ui/Button";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 
 export default function HomePage() {
   const router = useRouter();
@@ -21,7 +20,7 @@ export default function HomePage() {
         {/* Get Started Section */}
         <h2 className="text-3xl font-semibold mt-8">Get Started</h2>
         <p className="text-[var(--foreground)] text-base mb-6">
-          Begin by exploring the <strong>Patient Dashboard</strong>, where you'll find data from both past and current patients. From there, you can monitor progress, adjust treatment plans, and see how our AI adapts to each individual case.
+          Begin by exploring the <strong>Patient Dashboard</strong>, where you&apos;ll find data from both past and current patients. From there, you can monitor progress, adjust treatment plans, and see how our AI adapts to each individual case.
         </p>
         <div className="flex flex-wrap justify-center gap-4 pt-4">
           <Button variant="primary" onClick={() => router.push("/patient")}>Patient Dashboard</Button>

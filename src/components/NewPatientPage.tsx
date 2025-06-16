@@ -36,7 +36,6 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
   const [showModelInfo, setShowModelInfo] = useState(false);
   const [showPatientEdit, setShowPatientEdit] = useState(false);
   const [showManualScheduleForm, setShowManualScheduleForm] = useState(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
 const [bayesianParam, setBayesianParam] = useState<Record<string, number> | null>(null);
@@ -56,14 +55,13 @@ useEffect(() => {
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        setDropdownOpen(false);
+        // setDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const [resultsLoading, setResultsLoading] = useState(false);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
 
@@ -94,7 +92,7 @@ useEffect(() => {
   });
 
   const plotManual = () => {
-    setDropdownOpen(false);
+    // setDropdownOpen(false);
     setShowManualScheduleForm(true);
   };
 
@@ -127,8 +125,7 @@ useEffect(() => {
 
   const getResults = async (sgld: boolean) => {
     try {
-      setDropdownOpen(false);
-      setResultsLoading(true);
+      // setDropdownOpen(false);
       const requestBody: ResultsPostRequest = {
         id: patient.id,
         alias: sgld ? patient.modelSGLD.modelAlias : patient.modelBayesian.modelAlias,
@@ -161,8 +158,6 @@ useEffect(() => {
       }
     } catch (error) {
       console.error(error);
-    } finally {
-      setResultsLoading(false);
     }
   };
 
@@ -286,18 +281,9 @@ useEffect(() => {
     }
   };
 
-  const [lastModelUpdate, setLastModelUpdate] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!patient?.id) return;
-    const stored = localStorage.getItem(`lastModelUpdate_${patient.id}`);
-    if (stored) setLastModelUpdate(stored);
-  }, [patient?.id]);
-
   const updateModelTimestamp = () => {
     if (!patient?.id) return;
     const now = new Date().toISOString();
-    setLastModelUpdate(now);
     localStorage.setItem(`lastModelUpdate_${patient.id}`, now);
   };
 

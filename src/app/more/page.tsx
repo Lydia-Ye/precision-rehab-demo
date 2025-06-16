@@ -43,7 +43,7 @@ export default function MorePage() {
       {/* Contact Section */}
       <section className="space-y-4 bg-[var(--color-muted)] p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-[var(--color-primary)]">Contact Us</h2>
-        <p className="text-[var(--foreground)]">If you're interested in collaboration, feedback, or learning more:</p>
+        <p className="text-[var(--foreground)]">If you&apos;re interested in collaboration, feedback, or learning more:</p>
         <ul className="list-disc list-inside text-[var(--foreground)]">
           <li>Email: <a className="text-[var(--color-primary)] underline" href="mailto:dongzeye@usc.edu">dongzeye@usc.edu</a></li>
           <li>Email: <a className="text-[var(--color-primary)] underline" href="mailto:schweigh@usc.edu">schweigh@usc.edu</a></li>

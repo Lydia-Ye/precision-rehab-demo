@@ -28,7 +28,7 @@ export default function AllPatientsPage() {
       );
       setFilteredTableData(filteredRows);
     }
-  }, [nameFilter]);
+  }, [nameFilter, tableData]);
 
   useEffect(() => {
     if (statusFilter === "All") {
@@ -38,7 +38,7 @@ export default function AllPatientsPage() {
     } else {
       setFilteredTableData(tableData.filter(row => row.past));
     }
-  }, [statusFilter]);
+  }, [statusFilter, tableData]);
 
   const columns = [
     {

@@ -15,6 +15,4 @@ export interface PatientsPostRequest {
     actions: number[];
 }
 
-export interface PatientsPostResponse {
-
-}
+export type PatientsPostResponse = object;

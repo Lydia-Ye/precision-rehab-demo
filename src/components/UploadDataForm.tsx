@@ -208,7 +208,7 @@ export default function UploadDataForm({ patientID, pastAvgOut, pastDoseData, se
             console.log(data);
             if (onDataUpdated) onDataUpdated(pastAvgOutState, pastDoseDataState);
             setShowUpdateModelPrompt(true);
-        } catch (error) {
+        } catch {
             setValidationError("Failed to update data. Please try again.");
         } finally {
             setLoading(false);
