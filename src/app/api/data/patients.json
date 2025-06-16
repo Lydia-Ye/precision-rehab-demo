@@ -701,7 +701,7 @@
     "id": "18",
     "name": "Patient 18",
     "budget": 40,
-    "maxDose": 300,
+    "maxDose": 20,
     "age": 65,
     "weeksSinceStroke": 4,
     "leftStroke": true,
@@ -709,7 +709,7 @@
     "horizon": 12,
     "past": false,
     "outcomes": [0.2, 0.3, 0.4, 0.5],
-    "actions": [120, 150, 180, 200],
+    "actions": [10, 15, 18, 20],
     "modelBayesian": {
       "modelAlias": "18_Patient_18_bayes_version_8",
       "modelUri": "mock://models/bayesian/18-8"
@@ -723,7 +723,7 @@
     "id": "19",
     "name": "Patient 19",
     "budget": 35,
-    "maxDose": 250,
+    "maxDose": 20,
     "age": 58,
     "weeksSinceStroke": 6,
     "leftStroke": false,
@@ -731,7 +731,7 @@
     "horizon": 12,
     "past": false,
     "outcomes": [0.15, 0.25, 0.35, 0.45],
-    "actions": [100, 130, 160, 180],
+    "actions": [5, 3, 6, 8],
     "modelBayesian": {
       "modelAlias": "19_Patient_19_bayes_version_1",
       "modelUri": "mock://models/bayesian/19-1"
@@ -745,7 +745,7 @@
     "id": "20",
     "name": "Patient 20",
     "budget": 45,
-    "maxDose": 350,
+    "maxDose": 20,
     "age": 72,
     "weeksSinceStroke": 8,
     "leftStroke": true,
@@ -753,7 +753,7 @@
     "horizon": 12,
     "past": true,
     "outcomes": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6],
-    "actions": [150, 180, 200, 220, 250, 280],
+    "actions": [5, 3, 4, 5, 6, 7],
     "modelBayesian": {
       "modelAlias": "20_Patient_20_bayes_version_1",
       "modelUri": "mock://models/bayesian/20-1"
@@ -767,7 +767,7 @@
     "id": "21",
     "name": "Patient 21",
     "budget": 30,
-    "maxDose": 200,
+    "maxDose": 20,
     "age": 45,
     "weeksSinceStroke": 3,
     "leftStroke": false,
@@ -775,7 +775,7 @@
     "horizon": 12,
     "past": false,
     "outcomes": [0.25, 0.35, 0.45],
-    "actions": [80, 100, 120],
+    "actions": [4, 5, 6],
     "modelBayesian": {
       "modelAlias": "21_Patient_21_bayes_version_1",
       "modelUri": "mock://models/bayesian/21-1"
@@ -789,15 +789,15 @@
     "id": "22",
     "name": "Patient 22",
     "budget": 50,
-    "maxDose": 400,
+    "maxDose": 30,
     "age": 68,
     "weeksSinceStroke": 10,
     "leftStroke": true,
     "male": true,
     "horizon": 12,
-    "past": true,
+    "past": false,
     "outcomes": [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7],
-    "actions": [200, 250, 300, 320, 350, 380, 400],
+    "actions": [10, 15, 18, 20, 5, 8, 10],
     "modelBayesian": {
       "modelAlias": "22_Patient_22_bayes_version_1",
       "modelUri": "mock://models/bayesian/22-1"
