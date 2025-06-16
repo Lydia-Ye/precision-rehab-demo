@@ -130,10 +130,10 @@ useEffect(() => {
       setDropdownOpen(false);
       setResultsLoading(true);
       const requestBody: ResultsPostRequest = {
+        id: patient.id,
         alias: sgld ? patient.modelSGLD.modelAlias : patient.modelBayesian.modelAlias,
         budget: patient.budget - pastDoseData.reduce((acc, curr) => acc + curr, 0),
         horizon: patient.horizon - pastAvgOut.length + 1,
-        sgld: sgld,
         y_init: pastAvgOut.at(-1),
       };
       const res = await fetch("/api/results", {
@@ -175,7 +175,7 @@ useEffect(() => {
         future_actions: futureActions,
       };
 
-      const res = await fetch("http://localhost:5001/api/manual-predict", {
+      const res = await fetch("/api/manual-predict", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
