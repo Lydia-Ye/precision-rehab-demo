@@ -67,7 +67,7 @@ export async function POST(req: Request) {
     
     // If file loading fails, fall back to generating recommended results
     if (!results) {
-      results = generatePredictionResults(
+      results = await generatePredictionResults(
         String(params.patientId),
         params.budget,
         params.horizon,
