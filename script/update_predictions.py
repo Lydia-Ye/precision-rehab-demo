@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Simple script to update prediction values in JSON files with percentage-based gradual increases.
+Simple script to update prediction values in JSON files with percentage-based gradual changes.
 Usage: 
-    For gradual increase: python update_predictions.py <filename> <start_index> <max_percentage_increase>
+    For gradual change: python update_predictions.py <filename> <start_index> <max_percentage_change>
     For single index: python update_predictions.py <filename> single <index> <percentage_change>
 Example: 
-    python update_predictions.py recommended_schedule_results_11.json 2 25.0
+    python update_predictions.py recommended_schedule_results_11.json 2 25.0  # 25% increase
+    python update_predictions.py recommended_schedule_results_11.json 2 -15.0  # 15% decrease
     python update_predictions.py recommended_schedule_results_11.json single 5 -10.0
 """
 
@@ -13,14 +14,14 @@ import json
 import sys
 import os
 
-def update_predictions_percentage(data, start_index, max_percentage_increase):
+def update_predictions_percentage(data, start_index, max_percentage_change):
     """
-    Update prediction values in the JSON data with a gradual percentage increase.
+    Update prediction values in the JSON data with a gradual percentage change.
     
     Args:
         data: JSON data dictionary
-        start_index: Index to start the increase (0-based)
-        max_percentage_increase: Maximum percentage increase at the last value (e.g., 25.0 for 25%)
+        start_index: Index to start the change (0-based)
+        max_percentage_change: Maximum percentage change at the last value (e.g., 25.0 for 25% increase, -15.0 for 15% decrease)
     """
     
     for iteration_key in data:
@@ -37,21 +38,21 @@ def update_predictions_percentage(data, start_index, max_percentage_increase):
                         num_elements_to_modify = len(pred_array) - start_index
                         
                         if num_elements_to_modify > 0:
-                            # Apply gradual increase
+                            # Apply gradual change
                             for i in range(start_index, len(pred_array)):
                                 # Calculate the position within the range (0 to 1)
                                 position = (i - start_index) / (len(pred_array) - 1 - start_index) if len(pred_array) - 1 > start_index else 1.0
                                 
-                                # Calculate the percentage increase for this position
-                                # Linear interpolation from 0% to max_percentage_increase
-                                current_percentage = position * max_percentage_increase
+                                # Calculate the percentage change for this position
+                                # Linear interpolation from 0% to max_percentage_change
+                                current_percentage = position * max_percentage_change
                                 
-                                # Apply the percentage increase
+                                # Apply the percentage change
                                 original_value = pred_array[i]
-                                increase_amount = original_value * (current_percentage / 100.0)
-                                pred_array[i] = original_value + increase_amount
+                                change_amount = original_value * (current_percentage / 100.0)
+                                pred_array[i] = original_value + change_amount
                                 
-                                print(f"  {pred_key}[{i}]: {original_value:.4f} -> {pred_array[i]:.4f} (+{current_percentage:.1f}%)")
+                                print(f"  {pred_key}[{i}]: {original_value:.4f} -> {pred_array[i]:.4f} ({current_percentage:+.1f}%)")
 
 def update_single_prediction(data, index, percentage_change):
     """
@@ -84,10 +85,11 @@ def update_single_prediction(data, index, percentage_change):
 def main():
     if len(sys.argv) < 4:
         print("Usage:")
-        print("  For gradual increase: python update_predictions.py <filename> <start_index> <max_percentage_increase>")
+        print("  For gradual change: python update_predictions.py <filename> <start_index> <max_percentage_change>")
         print("  For single index: python update_predictions.py <filename> single <index> <percentage_change>")
         print("Example:")
-        print("  python update_predictions.py recommended_schedule_results_11.json 2 25.0")
+        print("  python update_predictions.py recommended_schedule_results_11.json 2 25.0  # 25% increase")
+        print("  python update_predictions.py recommended_schedule_results_11.json 2 -15.0  # 15% decrease")
         print("  python update_predictions.py recommended_schedule_results_11.json single 5 -10.0")
         sys.exit(1)
     
@@ -131,7 +133,7 @@ def main():
             update_single_prediction(data, index, percentage_change)
             
         else:
-            # Original gradual increase functionality
+            # Original gradual change functionality
             try:
                 start_index = int(sys.argv[2])
                 if start_index < 0:
@@ -142,22 +144,19 @@ def main():
                 sys.exit(1)
             
             try:
-                max_percentage_increase = float(sys.argv[3])
-                if max_percentage_increase < 0:
-                    print("Error: max_percentage_increase must be non-negative")
-                    sys.exit(1)
+                max_percentage_change = float(sys.argv[3])
             except ValueError:
-                print("Error: max_percentage_increase must be a number")
+                print("Error: max_percentage_change must be a number")
                 sys.exit(1)
             
             print(f"Configuration:")
             print(f"  Start index: {start_index}")
-            print(f"  Maximum percentage increase: {max_percentage_increase}%")
-            print(f"  Pattern: Gradual increase from index {start_index} to {max_percentage_increase}% at the last value")
+            print(f"  Maximum percentage change: {max_percentage_change:+.1f}%")
+            print(f"  Pattern: Gradual change from index {start_index} to {max_percentage_change:+.1f}% at the last value")
             print()
             
             # Apply the gradual updates
-            update_predictions_percentage(data, start_index, max_percentage_increase)
+            update_predictions_percentage(data, start_index, max_percentage_change)
         
         # Save updated data
         with open(filename, 'w') as f:
