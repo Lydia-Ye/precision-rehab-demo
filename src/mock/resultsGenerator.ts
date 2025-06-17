@@ -197,11 +197,11 @@ export const generatePredictionResults = async (
 
   // Calculate 95% confidence intervals
   const maxPrediction = Array.from({ length: horizon }, (_, i) =>
-    Math.min(MAX_MAL, meanPrediction[i] + 0.2 + Math.random() * 0.1)
+    Math.min(MAX_MAL, meanPrediction[i] + 0.3 + Math.random() * 0.1)
   );
 
   const minPrediction = Array.from({ length: horizon }, (_, i) =>
-    Math.max(0, meanPrediction[i] - 0.2 - Math.random() * 0.1)
+    Math.max(0, meanPrediction[i] - 0.3 - Math.random() * 0.1)
   );
 
   // Select a representative action sequence
@@ -224,21 +224,27 @@ export const generateManualScheduleResults = async (
   recommendedActions?: number[],
   recommendedPredictions?: { mean: number[]; min: number[]; max: number[] },
 ) => {
-  // Use the last parameter set, as in the backend
-  const param = params[params.length - 1] || {};
 
-  // Optionally load patient-specific parameters (if you have such a function)
-  // If not, just use param directly.
-  // If you have a function like loadModelParamsFromFile, you can use it here.
-  // const fileParams = patientId ? await loadModelParamsFromFile(patientId) : null;
+    // if the actions are the same, use the recommended predictions
+    if (recommendedActions && recommendedPredictions) {
+      if (recommendedActions.every((action, i) => action === futureActions[i])) {
+        return recommendedPredictions;
+      }
+    }
+
+  // --- NEW: Try to load patient-specific parameters from file ---
+  let fileParams: any = null;
+  if (patientId) {
+    fileParams = await loadModelParamsFromFile(patientId);
+  }
 
   // Use parameters from param, fallback to defaults if missing
-  const a = param.a ?? 0.7;
-  const b = param.b ?? 0.15;
-  const c = param.c ?? 1.8;
-  const noise_scale = param.noise_scale ?? param.noise ?? 0.3;
-  const sig_slope = param.sig_slope ?? 0.2;
-  const sig_offset = param.sig_offset ?? -3;
+  const a = fileParams.a ?? 0.7;
+  const b = fileParams.b ?? 0.15;
+  const c = fileParams.c ?? 1.8;
+  const noise_scale = fileParams.noise_scale ?? fileParams.noise ?? 0.3;
+  const sig_slope = fileParams.sig_slope ?? 0.2;
+  const sig_offset = fileParams.sig_offset ?? -3;
   const MAX_MAL = 5.0;
 
   // Helper functions for state <-> outcome
@@ -306,22 +312,53 @@ export const generateManualScheduleResults = async (
   }
 
   // --- Normalization/Blending Step ---
-  if (
-    recommendedActions &&
-    recommendedPredictions &&
-    recommendedActions.length === futureActions.length &&
-    recommendedPredictions.mean.length === nSteps
-  ) {
-    const blend = (manual: number[], recommended: number[], actionsA: number[], actionsB: number[]) =>
-      manual.map((val, i) => {
-        const sim = 1 - Math.min(1, Math.abs(actionsA[i] - actionsB[i]) / 30);
-        // If sim==1, use recommended; if sim==0, use manual; else blend
-        return sim * recommended[i] + (1 - sim) * val;
-      });
-    future_outcomes = blend(future_outcomes, recommendedPredictions.mean, futureActions, recommendedActions);
-    min_outcomes = blend(min_outcomes, recommendedPredictions.min, futureActions, recommendedActions);
-    max_outcomes = blend(max_outcomes, recommendedPredictions.max, futureActions, recommendedActions);
+  console.log("Recommended actions", recommendedActions);
+  console.log("Recommended predictions", recommendedPredictions);
+  console.log("Future actions", futureActions);
+  console.log("Future predictions", future_outcomes); 
+
+  // Blend the first predicted value with the last observed value
+  let blend_alpha = 0.6; // 0 = use prediction, 1 = use y_init, 0.5 = halfway
+
+  if (recommendedActions && recommendedActions[0] < futureActions[0]) {
+    blend_alpha = 1.8;
+    // Calculate the difference between blended and original first point
+    const original_first = future_outcomes[0];
+    future_outcomes[0] = blend_alpha * y_init + (1 - blend_alpha) * future_outcomes[0];
+    min_outcomes[0] = blend_alpha * y_init * 0.9 + (1 - blend_alpha) * min_outcomes[0];
+    max_outcomes[0] = blend_alpha * y_init * 1.1 + (1 - blend_alpha) * max_outcomes[0];
+    
+    // Calculate the difference to propagate
+    const first_point_diff = (future_outcomes[0] - original_first) * 1.2;
+    
+    // Propagate the difference to all subsequent points with decreasing effect
+    for (let i = 1; i < future_outcomes.length; i++) {
+      const decayFactor = Math.exp(-0.1 * i); // Exponential decay
+      future_outcomes[i] += first_point_diff * decayFactor;
+      min_outcomes[i] += first_point_diff * decayFactor;
+      max_outcomes[i] += first_point_diff * decayFactor;
+    }
+  } else {
+    blend_alpha = 0.5;
+    
+    // Calculate the difference between blended and original first point
+    const original_first = future_outcomes[0];
+    future_outcomes[0] = blend_alpha * y_init + (1 - blend_alpha) * future_outcomes[0];
+    min_outcomes[0] = blend_alpha * y_init * 0.9 + (1 - blend_alpha) * min_outcomes[0];
+    max_outcomes[0] = blend_alpha * y_init * 1.1 + (1 - blend_alpha) * max_outcomes[0];
+    
+    // Calculate the difference to propagate
+    const first_point_diff = future_outcomes[0] - original_first;
+    
+    // Propagate the difference to all subsequent points
+    for (let i = 1; i < future_outcomes.length; i++) {
+      const decayFactor = Math.exp(-0.05 * i); // Exponential decay
+      future_outcomes[i] += first_point_diff * decayFactor;
+      min_outcomes[i] += first_point_diff * decayFactor;
+      max_outcomes[i] += first_point_diff * decayFactor;
+    }
   }
+
 
   return {
     future_outcomes,
