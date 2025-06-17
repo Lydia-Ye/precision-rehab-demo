@@ -641,8 +641,8 @@
     ],
     "id": "15",
     "modelBayesian": {
-      "modelAlias": "15_Patient_15_bayes",
-      "modelUri": "mock://models/15_Patient_15_bayes"
+      "modelAlias": "15_Patient_15_bayes_0",
+      "modelUri": "mock://models/15_Patient_15_bayes_0"
     },
     "modelSGLD": {
       "modelAlias": "15_Patient_15_SGLD_version_1",
