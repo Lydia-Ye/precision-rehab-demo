@@ -537,7 +537,7 @@
     ],
     "actions": [
       4,
-      5,
+      3,
       5,
       null
     ],
@@ -673,20 +673,18 @@
     "maxDose": 20,
     "age": 80,
     "weeksSinceStroke": 15,
-    "leftStroke": false,
-    "male": false,
+    "leftStroke": true,
+    "male": true,
     "horizon": 10,
     "past": false,
     "outcomes": [
       3.7,
       3.9,
-      4.0123,
-      2.3
+      4.0123
     ],
     "actions": [
       5,
       3,
-      5,
       null
     ],
     "id": "17",
@@ -702,173 +700,6 @@
   {
     "id": "18",
     "name": "Patient 18",
-    "budget": 40,
-    "maxDose": 20,
-    "age": 65,
-    "weeksSinceStroke": 4,
-    "leftStroke": true,
-    "male": true,
-    "horizon": 12,
-    "past": false,
-    "outcomes": [
-      0.2,
-      0.3,
-      0.4,
-      0.5
-    ],
-    "actions": [
-      10,
-      15,
-      18,
-      null
-    ],
-    "modelBayesian": {
-      "modelAlias": "18_Patient_18_bayes_version_8_updated",
-      "modelUri": "mock://models/18_Patient_18_bayes_version_8_updated"
-    },
-    "modelSGLD": {
-      "modelAlias": "18_Patient_18_SGLD_version_1",
-      "modelUri": "mock://models/sgld/18-1"
-    }
-  },
-  {
-    "id": "19",
-    "name": "Patient 19",
-    "budget": 35,
-    "maxDose": 20,
-    "age": 58,
-    "weeksSinceStroke": 6,
-    "leftStroke": false,
-    "male": false,
-    "horizon": 12,
-    "past": false,
-    "outcomes": [
-      3.15,
-      3.25,
-      3.35,
-      3.45
-    ],
-    "actions": [
-      5,
-      3,
-      6,
-      null
-    ],
-    "modelBayesian": {
-      "modelAlias": "19_Patient_19_bayes_version_1",
-      "modelUri": "mock://models/bayesian/19-1"
-    },
-    "modelSGLD": {
-      "modelAlias": "19_Patient_19_SGLD_version_1",
-      "modelUri": "mock://models/sgld/19-1"
-    }
-  },
-  {
-    "id": "20",
-    "name": "Patient 20",
-    "budget": 45,
-    "maxDose": 20,
-    "age": 72,
-    "weeksSinceStroke": 8,
-    "leftStroke": true,
-    "male": true,
-    "horizon": 12,
-    "past": true,
-    "outcomes": [
-      1,
-      2.4,
-      2.8,
-      3.6,
-      3.9,
-      4.8
-    ],
-    "actions": [
-      5,
-      3,
-      4,
-      5,
-      6,
-      null
-    ],
-    "modelBayesian": {
-      "modelAlias": "20_Patient_20_bayes_version_1",
-      "modelUri": "mock://models/bayesian/20-1"
-    },
-    "modelSGLD": {
-      "modelAlias": "20_Patient_20_SGLD_version_1",
-      "modelUri": "mock://models/sgld/20-1"
-    }
-  },
-  {
-    "id": "21",
-    "name": "Patient 21",
-    "budget": 60,
-    "maxDose": 20,
-    "age": 45,
-    "weeksSinceStroke": 3,
-    "leftStroke": false,
-    "male": false,
-    "horizon": 12,
-    "past": false,
-    "outcomes": [
-      2.5,
-      3.5,
-      4.5
-    ],
-    "actions": [
-      4,
-      5,
-      null
-    ],
-    "modelBayesian": {
-      "modelAlias": "21_Patient_21_bayes_version_1",
-      "modelUri": "mock://models/bayesian/21-1"
-    },
-    "modelSGLD": {
-      "modelAlias": "21_Patient_21_SGLD_version_1",
-      "modelUri": "mock://models/sgld/21-1"
-    }
-  },
-  {
-    "id": "22",
-    "name": "Patient 22",
-    "budget": 50,
-    "maxDose": 30,
-    "age": 68,
-    "weeksSinceStroke": 10,
-    "leftStroke": true,
-    "male": true,
-    "horizon": 12,
-    "past": false,
-    "outcomes": [
-      0.1,
-      0.2,
-      0.3,
-      0.4,
-      0.5,
-      0.6,
-      0.7
-    ],
-    "actions": [
-      10,
-      15,
-      18,
-      20,
-      5,
-      8,
-      null
-    ],
-    "modelBayesian": {
-      "modelAlias": "22_Patient_22_bayes_version_1",
-      "modelUri": "mock://models/bayesian/22-1"
-    },
-    "modelSGLD": {
-      "modelAlias": "22_Patient_22_SGLD_version_1",
-      "modelUri": "mock://models/sgld/22-1"
-    }
-  },
-  {
-    "name": "23",
     "budget": 60,
     "maxDose": 20,
     "age": 80,
@@ -877,12 +708,26 @@
     "male": true,
     "horizon": 10,
     "past": false,
-    "outcomes": [],
-    "actions": [],
-    "id": "23",
+    "outcomes": [
+      3.13,
+      3.56,
+      3.99,
+      3.8
+    ],
+    "actions": [
+      3.5,
+      3.4,
+      4,
+      null
+    ],
+    "id": "18",
     "modelBayesian": {
-      "modelAlias": "23_Patient_23_bayes_version_1",
-      "modelUri": "mock://models/23_Patient_23_bayes_version_1"
+      "modelAlias": "18_Patient_18_bayes_version_3",
+      "modelUri": "mock://models/18_Patient_18_bayes_version_3"
+    },
+    "modelSGLD": {
+      "modelAlias": "18_Patient_18_SGLD_version_1",
+      "modelUri": "mock://models/sgld/18-1"
     }
   }
 ]
