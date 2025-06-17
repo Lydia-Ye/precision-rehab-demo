@@ -282,8 +282,8 @@ export default function UploadDataForm({ patientID, pastAvgOut, pastDoseData, se
                                 >
                                     Edit
                                 </Button>
-                                <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 p-2 bg-[var(--foreground)]/60 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 pointer-events-none text-center">
-                                    The current demo version doesn't support dynamic data update.
+                                <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 p-2 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 pointer-events-none text-center">
+                                    The current demo version doesn&apos;t support dynamic data update.
                                 </div>
                             </div>
                         ) : (
