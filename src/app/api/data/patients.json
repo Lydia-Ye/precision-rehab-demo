@@ -614,5 +614,39 @@
       "modelAlias": "14_Patient_14_SGLD_version_1",
       "modelUri": "mock://models/sgld/14-1"
     }
+  },
+  {
+    "name": "15",
+    "budget": 80,
+    "maxDose": 20,
+    "age": 32,
+    "weeksSinceStroke": 10,
+    "leftStroke": false,
+    "male": true,
+    "horizon": 10,
+    "past": false,
+    "outcomes": [
+      2.155,
+      2.701,
+      2.966,
+      2.539,
+      3.068
+    ],
+    "actions": [
+      7,
+      3,
+      2,
+      3,
+      null
+    ],
+    "id": "15",
+    "modelBayesian": {
+      "modelAlias": "15_Patient_15_bayes",
+      "modelUri": "mock://models/15_Patient_15_bayes"
+    },
+    "modelSGLD": {
+      "modelAlias": "15_Patient_15_SGLD_version_1",
+      "modelUri": "mock://models/15_Patient_15_sgld"
+    }
   }
 ]
