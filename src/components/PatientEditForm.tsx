@@ -126,13 +126,19 @@ export default function PatientEditForm({ patient, setPatient, setShowForm, upda
                 <h2 className="text-2xl font-bold">Edit Patient Info</h2>
                 <div className="flex gap-2 ml-auto">
                     {!isEditing ? (
-                        <Button
-                            type="button"
-                            variant="secondary"
-                            onClick={() => setIsEditing(true)}
-                        >
-                            Edit
-                        </Button>
+                        <div className="relative group">
+                            <Button
+                                type="button"
+                                variant="secondary"
+                                onClick={() => {}}
+                                disabled
+                            >
+                                Edit
+                            </Button>
+                            <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 p-2 bg-[var(--foreground)]/60 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 pointer-events-none text-center">
+                                The current demo version doesn&apos;t support editing patient info.
+                            </div>
+                        </div>
                     ) : (
                         <>
                             <Button
