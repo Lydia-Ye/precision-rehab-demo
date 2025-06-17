@@ -15,5 +15,6 @@ export interface PatientsPutRequest {
         leftStroke: boolean;
         male: boolean;
     },
-    sgld: boolean
+    sgld: boolean,
+    modelId?: string;
 }

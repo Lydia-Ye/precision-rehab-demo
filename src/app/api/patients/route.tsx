@@ -139,8 +139,20 @@ export async function PUT(req: Request) {
     // Persist new data to disk with proper formatting
     await fs.writeFile(filePath, JSON.stringify(patients, null, 2));
 
-    // Return updated patient
-    return NextResponse.json({ message: "Patient updated", patient: patient });
+    // Randomly select a new model id for the patient
+    const modelDir = path.join(process.cwd(), "src/mock/prediction_results", data.patientID);
+    let files = await fs.readdir(modelDir);
+    files = files.filter(f => f.endsWith('.json'));
+    const modelIds = files.map(f => f.replace('.json', ''));
+    const currentModelId = data.modelId || '0';
+    const otherModelIds = modelIds.filter(id => id !== currentModelId);
+    let newModelId = currentModelId;
+    if (otherModelIds.length > 0) {
+      newModelId = otherModelIds[Math.floor(Math.random() * otherModelIds.length)];
+    }
+
+    // Return updated patient and new modelId
+    return NextResponse.json({ message: "Patient updated", patient: patient, newModelId });
   } catch (error) {
     console.error("Error updating patient:", error);
     return NextResponse.json({ error: "Failed to update patient" }, { status: 500 });

@@ -6,9 +6,11 @@ import ModelInfoDropdown from "@/components/ModelInfoDropdown";
 
 interface UpdateModelsFormProps {
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>; 
-    updateModels: (newMaxDose: number, sgld: boolean) => Promise<void>;
+    updateModels: (newMaxDose: number, sgld: boolean, setModelId: (id: string) => void, currentModelId: string) => Promise<void>;
     updateModelTimestamp: () => void;
     patientId: string;
+    setModelId: (id: string) => void;
+    modelId: string;
 }
 
 function formatDateTime(dateString: string) {
@@ -16,13 +18,12 @@ function formatDateTime(dateString: string) {
     return date.toLocaleString();
 }
 
-export default function UpdateModelsForm({ setShowForm, updateModels, updateModelTimestamp, patientId }: UpdateModelsFormProps) {
+export default function UpdateModelsForm({ setShowForm, updateModels, updateModelTimestamp, patientId, setModelId, modelId }: UpdateModelsFormProps) {
     // Loading for updating patient models.
     const [updateLoading, setUpdateLoading] = useState(false);
     const [progress, setProgress] = useState(0);
     const [statusMessage, setStatusMessage] = useState("");
     const [lastUpdate, setLastUpdate] = useState<string | null>(null);
-    const [modelId, setModelId] = useState('0');
     const [bayesianParam, setBayesianParam] = useState<Record<string, number> | null>(null);
 
     // Dropdown state.
@@ -30,7 +31,6 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
 
     const MAX_DOSE = 20;
     const SIMULATED_DELAY = 5000; // 3 seconds delay
-    const ITERATIONS = 5; // Number of iterations to simulate
 
     // Fetch bayesianParam for this patientId and modelId
     useEffect(() => {
@@ -96,14 +96,7 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
         setUpdateLoading(true);
         setStatusMessage("Updating prediction model...");
         try {
-            // Simulate the update process with delay
-            await new Promise(resolve => setTimeout(resolve, SIMULATED_DELAY));
-            
-            // Randomly select an iteration number for the model parameters
-            const selectedIteration = Math.floor(Math.random() * ITERATIONS) + 1;
-            console.log(`Selected model parameters from iteration ${selectedIteration}`);
-            
-            await updateModels(MAX_DOSE, sgld);
+            await updateModels(MAX_DOSE, sgld, setModelId, modelId);
             updateModelTimestamp();
             const now = new Date().toISOString();
             setLastUpdate(now);
@@ -138,14 +131,14 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
                 </p>
 
                 {/* Model ID Selector */}
-                <div className="mb-4">
+                {/* <div className="mb-4">
                     <label htmlFor="modelId" className="mr-2 font-semibold">Select Model ID:</label>
                     <select id="modelId" value={modelId} onChange={e => setModelId(e.target.value)} className="border rounded px-2 py-1">
                         {[0,1,2,3,4,5,6,7,8,9].map(id => (
                             <option key={id} value={id}>{id}</option>
                         ))}
                     </select>
-                </div>
+                </div> */}
 
                 {/* Inline dropdown for model parameters */}
                 <ModelInfoDropdown bayesianParam={bayesianParam} />

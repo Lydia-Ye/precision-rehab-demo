@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 
 import CurrentPredictChart from "@/components/CurrentPredictChart";
@@ -59,24 +59,6 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
     fetchParams();
   }, [patient, modelId]);
 
-  useEffect(() => {
-    // Fetch prediction results for the selected modelId when it changes
-    getResults(false);
-    // Optionally, you could also clear or update sgldPrediction if needed
-  }, [modelId]);
-
-  // Closes dropdown element on clicking outside the component.
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
-        // setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const [updateLoading, setUpdateLoading] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
 
   const [pastAvgOut, setPastAvgOut] = useState<number[]>(patient.outcomes);
@@ -104,41 +86,8 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
     futureDoseData: []
   });
 
-  const plotManual = () => {
-    // setDropdownOpen(false);
-    setShowManualScheduleForm(true);
-  };
-
-  const clearGraph = () => {
-    setBayesianPrediction({
-      maxOut: [],
-      futureAvgOut: [],
-      minOut: [],
-      futureDoseData: []
-    });
-    setSgldPrediction({
-      maxOut: [],
-      futureAvgOut: [],
-      minOut: [],
-      futureDoseData: []
-    });
-    setManualPrediction({
-      maxOut: [],
-      futureAvgOut: [],
-      minOut: [],
-      futureDoseData: []
-    });
-    // Reset checkbox states
-    setSelectedModels({
-      bayesian: false,
-      sgld: false,
-      manual: false,
-    });
-  };
-
-  const getResults = async (sgld: boolean) => {
+  const getResults = useCallback(async (sgld: boolean) => {
     try {
-      // setDropdownOpen(false);
       const requestBody: ResultsPostRequest & { modelId: string } = {
         id: patient.id,
         alias: sgld ? patient.modelSGLD.modelAlias : patient.modelBayesian.modelAlias,
@@ -173,6 +122,57 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
     } catch (error) {
       console.error(error);
     }
+  }, [patient, pastDoseData, pastAvgOut, modelId]);
+
+  useEffect(() => {
+    // Fetch prediction results for the selected modelId when it changes
+    getResults(false);
+    // Optionally, you could also clear or update sgldPrediction if needed
+  }, [modelId, getResults]);
+
+  // Closes dropdown element on clicking outside the component.
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        // setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const [updateLoading, setUpdateLoading] = useState(false);
+
+  const plotManual = () => {
+    // setDropdownOpen(false);
+    setShowManualScheduleForm(true);
+  };
+
+  const clearGraph = () => {
+    setBayesianPrediction({
+      maxOut: [],
+      futureAvgOut: [],
+      minOut: [],
+      futureDoseData: []
+    });
+    setSgldPrediction({
+      maxOut: [],
+      futureAvgOut: [],
+      minOut: [],
+      futureDoseData: []
+    });
+    setManualPrediction({
+      maxOut: [],
+      futureAvgOut: [],
+      minOut: [],
+      futureDoseData: []
+    });
+    // Reset checkbox states
+    setSelectedModels({
+      bayesian: false,
+      sgld: false,
+      manual: false,
+    });
   };
 
   const handleManualSchedule = async (futureActions: number[]) => {
@@ -208,7 +208,9 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
   };
 
 // Function to call PUT route to update models.
-  const updateModels = async (newMaxDose: number, sgld: boolean) => {
+  const updateModels = async (newMaxDose: number, sgld: boolean, setModelId: (id: string) => void, currentModelId: string) => {
+    // Simulate model updating delay
+    await new Promise(resolve => setTimeout(resolve, 500));
     // Clear all prediction visualizations before updating
     setBayesianPrediction({ maxOut: [], futureAvgOut: [], minOut: [], futureDoseData: [] });
     setSgldPrediction({ maxOut: [], futureAvgOut: [], minOut: [], futureDoseData: [] });
@@ -245,7 +247,8 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
           leftStroke: patient.leftStroke,
           male: patient.male,
         },
-        sgld: sgld
+        sgld: sgld,
+        modelId: currentModelId,
       };
 
       const res = await fetch("/api/patients", {
@@ -256,6 +259,9 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
       if (!res.ok) throw new Error("Failed to update model");
       const data = await res.json();
       setPatient(data.patient);
+      if (data.newModelId) {
+        setModelId(data.newModelId);
+      }
       setUpdateProgress(100); // Complete progress bar
       setTimeout(() => setUpdateProgress(0), 500); // Reset after short delay
     } catch (error) {
@@ -332,9 +338,11 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
           >
             <UpdateModelsForm
               setShowForm={setShowUpdateForm}
-              updateModels={updateModels}
+              updateModels={(newMaxDose: number, sgld: boolean) => updateModels(newMaxDose, sgld, setModelId, modelId)}
               updateModelTimestamp={updateModelTimestamp}
               patientId={patient.id}
+              setModelId={setModelId}
+              modelId={modelId}
             />
           </div>
         </div>
@@ -355,7 +363,7 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
               pastDoseData={pastDoseData}
               setShowForm={setShowUploadForm}
               onDataUpdated={handleDataUpdated}
-              onRequestModelUpdate={() => updateModels(patient.maxDose, false)}
+              onRequestModelUpdate={() => updateModels(patient.maxDose, false, setModelId, modelId)}
               updateModelTimestamp={updateModelTimestamp}
             />
           </div>
@@ -597,16 +605,6 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
           </div>
         </div>
       </main>
-
-      {/* Model ID Selector */}
-      <div className="mb-4">
-        <label htmlFor="modelId" className="mr-2 font-semibold">Select Model ID:</label>
-        <select id="modelId" value={modelId} onChange={e => setModelId(e.target.value)} className="border rounded px-2 py-1">
-          {[0,1,2,3,4,5,6,7,8,9].map(id => (
-            <option key={id} value={id}>{id}</option>
-          ))}
-        </select>
-      </div>
     </>
   );
 }
