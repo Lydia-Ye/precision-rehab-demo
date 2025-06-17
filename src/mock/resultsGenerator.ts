@@ -86,15 +86,13 @@ export const generatePredictionResults = (
   });
 
   // Calculate 95% confidence intervals
-  const maxPrediction = Array.from({ length: horizon }, (_, i) => {
-    const values = stackedOutcomes.map(p => p[i]);
-    return Math.min(MAX_MAL, meanPrediction[i] + 0.2 + Math.random() * 0.1);
-  });
+  const maxPrediction = Array.from({ length: horizon }, (_, i) =>
+    Math.min(MAX_MAL, meanPrediction[i] + 0.2 + Math.random() * 0.1)
+  );
 
-  const minPrediction = Array.from({ length: horizon }, (_, i) => {
-    const values = stackedOutcomes.map(p => p[i]);
-    return Math.max(0, meanPrediction[i] - 0.2 - Math.random() * 0.1);
-  });
+  const minPrediction = Array.from({ length: horizon }, (_, i) =>
+    Math.max(0, meanPrediction[i] - 0.2 - Math.random() * 0.1)
+  );
 
   // Select a representative action sequence
   const selectedActions = ensemblePredictions[Math.floor(Math.random() * NUM_SIMULATIONS)].actions;

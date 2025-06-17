@@ -32,7 +32,7 @@ export async function POST(req: Request) {
   try {
     const data = await req.json();
 
-    const { id, params, y_init, past_actions, future_actions } = data;
+    const { id, params, y_init, future_actions } = data;
 
     // Try to load manual prediction results from file first
     let results = await loadManualPredictionResults(String(id));
