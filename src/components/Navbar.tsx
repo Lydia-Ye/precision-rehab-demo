@@ -17,13 +17,16 @@ const Navbar = () => {
   return (
     <nav className="w-full px-6 py-4 bg-[var(--background)] text-[var(--foreground)] shadow-sm rounded-2xl mx-auto max-w-screen-xl mt-4">
       <div className="flex justify-between items-center">
-        {/* Web title */}
+        {/* Web title with demo tag */}
         <div
           onClick={() => router.push("/")}
           className="flex items-center gap-2 text-xl font-semibold tracking-tight cursor-pointer"
         >
           <Image src="/image/logo.png" alt="Precision Rehabilitation" width={36} height={36} />
-          Precision Rehabilitation
+          <span>Precision Rehabilitation</span>
+          <span className="ml-2 px-2 py-0.5 text-xs font-bold bg-[var(--color-demo)] text-white rounded-md uppercase tracking-wide">
+            Demo
+          </span>
         </div>
 
         {/* Links */}
