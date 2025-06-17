@@ -2,6 +2,52 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs/promises";
 import path from "path";
 
+// Define interfaces for the prediction result structures
+interface LastParam {
+  a: number;
+  b: number;
+  c: number;
+  noise_scale: number;
+  sig_slope: number;
+  sig_offset: number;
+  error_scale: number;
+}
+
+interface RecommendedScheduleResult {
+  patient_id: string;
+  timestamp: string;
+  schedule_type: "recommended";
+  last_param: LastParam;
+  past_outcomes: number[];
+  past_actions: (number | null)[];
+  y_init: number;
+  maxPrediction: number[];
+  minPrediction: number[];
+  meanPrediction: number[];
+  dosage: number[];
+}
+
+interface ManualScheduleResult {
+  patient_id: string;
+  timestamp: string;
+  schedule_type: "manual";
+  last_param: LastParam;
+  past_outcomes: number[];
+  past_actions: (number | null)[];
+  y_init: number;
+  future_actions: number[];
+  max_outcomes: number[];
+  min_outcomes: number[];
+  median_trajectory: number[];
+  median_actions: number[];
+  median_score: number;
+}
+
+interface PredictionResults {
+  recommended?: RecommendedScheduleResult;
+  manual?: ManualScheduleResult;
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ patientId: string }> }
@@ -9,10 +55,7 @@ export async function GET(
   try {
     const { patientId } = await params;
     
-    const results: {
-      recommended?: any;
-      manual?: any;
-    } = {};
+    const results: PredictionResults = {};
 
     // Load recommended schedule results
     const recommendedPath = path.join(
