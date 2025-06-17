@@ -180,12 +180,13 @@ useEffect(() => {
       if (!res.ok) throw new Error("Manual prediction failed");
 
       const data = await res.json();
+      console.log(data);
 
       setManualPrediction({
-        maxOut: data.max_outcomes,
-        futureAvgOut: data.future_outcomes,
-        minOut: data.min_outcomes,
-        futureDoseData: futureActions
+        maxOut: data.maxPrediction,
+        futureAvgOut: data.meanPrediction,
+        minOut: data.minPrediction,
+        futureDoseData: data.dosage
       });
 
     } catch (err) {
@@ -548,7 +549,7 @@ useEffect(() => {
             Clear Prediction
           </Button>
           
-          {/* TODO: Add data table */}           
+         
           {/* <Button
             className="mt-4"
           >
