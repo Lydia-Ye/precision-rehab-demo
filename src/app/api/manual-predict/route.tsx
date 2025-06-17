@@ -16,11 +16,19 @@ async function loadRecommendedPredictionResults(patientId: string) {
     const resultsData = await fs.readFile(resultsPath, "utf-8");
     const results = JSON.parse(resultsData);
 
+    // If the file has iterations, pick a random one
+    let iter = results;
+    const iterKeys = Object.keys(results).filter(k => k.startsWith("iter_"));
+    if (iterKeys.length > 0) {
+      const randomKey = iterKeys[Math.floor(Math.random() * iterKeys.length)];
+      iter = results[randomKey];
+    }
+
     return {
-      maxPrediction: results.maxPrediction,
-      minPrediction: results.minPrediction,
-      meanPrediction: results.meanPrediction,
-      dosage: results.dosage,
+      maxPrediction: iter.maxPrediction,
+      minPrediction: iter.minPrediction,
+      meanPrediction: iter.meanPrediction,
+      dosage: iter.dosage,
     };
   } catch (error) {
     console.log(`Failed to load recommended prediction results for patient ${patientId}:`, error);
