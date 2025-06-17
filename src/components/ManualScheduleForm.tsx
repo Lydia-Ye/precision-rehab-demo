@@ -173,6 +173,7 @@ export default function ManualScheduleForm({
                           type="number"
                           min="0"
                           max={maxDose}
+                          step="any"
                           value={futureActions[0]}
                           onChange={e => updateAction(0, e.target.value)}
                           className="px-3 py-2 border rounded w-full"
@@ -209,6 +210,7 @@ export default function ManualScheduleForm({
                       type="number"
                       min="0"
                       max={maxDose}
+                      step="any"
                       value={futureActions[idx]}
                       onChange={e => updateAction(idx, e.target.value)}
                       className="px-3 py-2 border rounded w-full"
