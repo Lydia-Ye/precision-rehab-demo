@@ -11,6 +11,7 @@ interface PatientPageProps {
 
 export default function PastPatientPage({ patient }: PatientPageProps) {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     fetch("/api/patients")
@@ -68,6 +69,14 @@ export default function PastPatientPage({ patient }: PatientPageProps) {
           <p><strong>Final MAL Score:</strong> {finalMAL}</p>
         </div>
 
+        <Button
+          className="w-56"
+          variant="secondary"
+          onClick={() => setShowInfoModal(true)}
+        >
+          Patient Info
+        </Button>
+
         <div className="border-t border-[var(--color-border)] pt-4 space-y-2 text-sm text-gray-500">
           <p>This patient&apos;s rehabilitation data was observed and recorded over the course of treatment.</p>
         </div>
@@ -104,6 +113,33 @@ export default function PastPatientPage({ patient }: PatientPageProps) {
           {!hasNextPatient && <div></div>}
         </div>
       </div>
+
+      {/* Modal for Patient Info */}
+      {showInfoModal && (
+        <div className="fixed inset-0 bg-[rgba(0,0,0,0.2)] flex items-center justify-center z-50">
+          <div className="bg-white rounded-2xl shadow-lg p-6 max-w-md w-full text-center" onClick={e => e.stopPropagation()}>
+            <h3 className="text-2xl font-bold mb-4">Patient Information</h3>
+            <div className="text-left space-y-2 mb-6">
+              <p><strong>Name:</strong> {patient.name}</p>
+              {patient.age !== undefined && <p><strong>Age:</strong> {patient.age}</p>}
+              {patient.weeksSinceStroke !== undefined && <p><strong>Weeks Since Stroke:</strong> {patient.weeksSinceStroke}</p>}
+              {patient.leftStroke !== undefined && <p><strong>Left Stroke:</strong> {patient.leftStroke ? 'Yes' : 'No'}</p>}
+              {patient.male !== undefined && <p><strong>Gender:</strong> {patient.male ? 'Male' : 'Female'}</p>}
+              <p><strong>Total Treatment Hours:</strong> {totalDose} hours</p>
+              <p><strong>Final MAL Score:</strong> {finalMAL}</p>
+              <p><strong>Treatment Weeks:</strong> {horizon}</p>
+            </div>
+            <Button
+              type="button"
+              variant="danger"
+              onClick={() => setShowInfoModal(false)}
+              className="w-32"
+            >
+              Close
+            </Button>
+          </div>
+        </div>
+      )}
 
     </main>
   );
