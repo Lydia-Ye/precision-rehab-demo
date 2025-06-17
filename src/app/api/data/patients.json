@@ -490,7 +490,7 @@
     }
   },
   {
-    "name": "11",
+    "name": "A - Week 4",
     "budget": 60,
     "maxDose": 20,
     "age": 80,
@@ -520,71 +520,7 @@
     }
   },
   {
-    "name": "12",
-    "budget": 60,
-    "maxDose": 20,
-    "age": 30,
-    "weeksSinceStroke": 15,
-    "leftStroke": false,
-    "male": false,
-    "horizon": 12,
-    "past": false,
-    "outcomes": [
-      1.68,
-      1.93,
-      2.04,
-      2.26
-    ],
-    "actions": [
-      4,
-      3,
-      5,
-      null
-    ],
-    "id": "12",
-    "modelBayesian": {
-      "modelAlias": "12_Patient_12_bayes_version_11_updated",
-      "modelUri": "mock://models/12_Patient_12_bayes_version_11_updated"
-    },
-    "modelSGLD": {
-      "modelAlias": "12_Patient_12_SGLD_version_1",
-      "modelUri": "mock://models/sgld/12-1"
-    }
-  },
-  {
-    "name": "13",
-    "budget": 60,
-    "maxDose": 20,
-    "age": 24,
-    "weeksSinceStroke": 15,
-    "leftStroke": true,
-    "male": false,
-    "horizon": 8,
-    "past": false,
-    "outcomes": [
-      2.19,
-      2.89,
-      3.24,
-      3
-    ],
-    "actions": [
-      6,
-      5,
-      3,
-      null
-    ],
-    "id": "13",
-    "modelBayesian": {
-      "modelAlias": "13_Patient_13_bayes_version_8",
-      "modelUri": "mock://models/bayesian/13-8"
-    },
-    "modelSGLD": {
-      "modelAlias": "13_Patient_13_SGLD_version_1",
-      "modelUri": "mock://models/sgld/13-1"
-    }
-  },
-  {
-    "name": "14",
+    "name": "A - Week 6",
     "budget": 60,
     "maxDose": 20,
     "age": 80,
@@ -594,59 +530,88 @@
     "horizon": 10,
     "past": false,
     "outcomes": [
-      2.3,
-      2.53,
-      3.201,
-      2.83
+      2,
+      2.5,
+      3.4,
+      3.45
     ],
     "actions": [
+      4,
       5,
-      3,
-      4.4,
+      9,
       null
     ],
-    "id": "14",
+    "id": "12",
     "modelBayesian": {
-      "modelAlias": "14_Patient_14_bayes_version_7",
-      "modelUri": "mock://models/bayesian/14-7"
+      "modelAlias": "11_Patient_11_bayes_version_8_updated",
+      "modelUri": "/mock/uri/11_Patient_11_bayes_version_8_updated"
     },
     "modelSGLD": {
-      "modelAlias": "14_Patient_14_SGLD_version_1",
-      "modelUri": "mock://models/sgld/14-1"
+      "modelAlias": "11_Patient_11_SGLD_version_1",
+      "modelUri": "mock://models/sgld/11-1"
     }
   },
   {
-    "name": "15",
-    "budget": 80,
+    "name": "A - Week 8",
+    "budget": 60,
     "maxDose": 20,
-    "age": 32,
-    "weeksSinceStroke": 10,
-    "leftStroke": false,
+    "age": 80,
+    "weeksSinceStroke": 15,
+    "leftStroke": true,
     "male": true,
     "horizon": 10,
     "past": false,
     "outcomes": [
-      2.155,
-      2.701,
-      2.966,
-      2.539,
-      3.068
+      2,
+      2.5,
+      3.4,
+      3.55
     ],
     "actions": [
-      7,
-      3,
-      2,
-      3,
+      4,
+      5,
+      10,
       null
     ],
-    "id": "15",
+    "id": "12",
     "modelBayesian": {
-      "modelAlias": "15_Patient_15_bayes_0",
-      "modelUri": "mock://models/15_Patient_15_bayes_0"
+      "modelAlias": "11_Patient_11_bayes_version_8_updated",
+      "modelUri": "/mock/uri/11_Patient_11_bayes_version_8_updated"
     },
     "modelSGLD": {
-      "modelAlias": "15_Patient_15_SGLD_version_1",
-      "modelUri": "mock://models/15_Patient_15_sgld"
+      "modelAlias": "11_Patient_11_SGLD_version_1",
+      "modelUri": "mock://models/sgld/11-1"
+    }
+  },{
+    "name": "A - Week 8",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 80,
+    "weeksSinceStroke": 15,
+    "leftStroke": true,
+    "male": true,
+    "horizon": 10,
+    "past": false,
+    "outcomes": [
+      2,
+      2.5,
+      3.4,
+      3.55
+    ],
+    "actions": [
+      4,
+      5,
+      10,
+      null
+    ],
+    "id": "12",
+    "modelBayesian": {
+      "modelAlias": "11_Patient_11_bayes_version_8_updated",
+      "modelUri": "/mock/uri/11_Patient_11_bayes_version_8_updated"
+    },
+    "modelSGLD": {
+      "modelAlias": "11_Patient_11_SGLD_version_1",
+      "modelUri": "mock://models/sgld/11-1"
     }
   }
 ]
