@@ -273,13 +273,19 @@ export default function UploadDataForm({ patientID, pastAvgOut, pastDoseData, se
                     <h2 className="text-2xl font-bold">Observed Data</h2>
                     <div className="flex gap-2 ml-auto">
                         {!isEmpty && !isEditing ? (
-                            <Button
-                                type="button"
-                                variant="secondary"
-                                onClick={() => setIsEditing(true)}
-                            >
-                                Edit
-                            </Button>
+                            <div className="relative group">
+                                <Button
+                                    type="button"
+                                    variant="secondary"
+                                    onClick={() => {}}
+                                    disabled
+                                >
+                                    Edit
+                                </Button>
+                                <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 p-2 bg-[var(--foreground)]/60 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-50 pointer-events-none text-center">
+                                    The current demo version doesn't support dynamic data update.
+                                </div>
+                            </div>
                         ) : (
                             !isEmpty && (
                                 <>
