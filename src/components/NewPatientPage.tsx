@@ -6,7 +6,6 @@ import Link from "next/link";
 import CurrentPredictChart from "@/components/CurrentPredictChart";
 import UpdateModelsForm from "@/components/UpdateModelsForm";
 import UploadDataForm from "@/components/UploadDataForm";
-import ModelInfoOverlay from "@/components/ModelInfoOverlay";
 import PatientEditForm from "@/components/PatientEditForm";
 import ManualScheduleForm from "@/components/ManualScheduleForm";
 import PredictionSummary from "@/components/PredictionSummary";
@@ -352,24 +351,6 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
               onDataUpdated={handleDataUpdated}
               onRequestModelUpdate={() => updateModels(patient.maxDose, false)}
               updateModelTimestamp={updateModelTimestamp}
-            />
-          </div>
-        </div>
-      )}
-
-      {showModelInfo && (
-        <div
-          className='fixed inset-0 bg-[rgba(0,0,0,0.2)] flex items-center justify-center z-50'
-          onClick={() => setShowModelInfo(false)}
-        >
-          <div
-            className='bg-white rounded-2xl shadow-lg p-6 max-w-lg w-full'
-            onClick={(e) => e.stopPropagation()}
-          >
-            <ModelInfoOverlay
-              patient={patient}
-              setShowForm={setShowModelInfo}
-              bayesianParam={bayesianParam}
             />
           </div>
         </div>

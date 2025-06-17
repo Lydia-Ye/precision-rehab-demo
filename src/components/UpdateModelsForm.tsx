@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Button from "@/components/ui/Button";
+import ModelInfoDropdown from "@/components/ModelInfoDropdown";
 
 interface UpdateModelsFormProps {
     setShowForm: React.Dispatch<React.SetStateAction<boolean>>; 
@@ -22,6 +23,7 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
     const [progress, setProgress] = useState(0);
     const [statusMessage, setStatusMessage] = useState("");
     const [lastUpdate, setLastUpdate] = useState<string | null>(null);
+    const [bayesianParam, setBayesianParam] = useState<Record<string, number> | null>(null);
 
     // Dropdown state.
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -29,6 +31,15 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
     const MAX_DOSE = 20;
     const SIMULATED_DELAY = 5000; // 3 seconds delay
     const ITERATIONS = 5; // Number of iterations to simulate
+
+    // Fetch bayesianParam for this patientId
+    useEffect(() => {
+        if (!patientId) return;
+        fetch(`/api/model-params/${patientId}`)
+            .then(res => res.ok ? res.json() : null)
+            .then(data => setBayesianParam(data))
+            .catch(() => setBayesianParam(null));
+    }, [patientId, lastUpdate]);
 
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -125,13 +136,9 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
                 <p>
                     The model learns from each observed dose and outcome, updating its predictions using Bayesian reinforcement learning to support personalized rehabilitation planning.
                 </p>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => setShowModelInfo(true)}
-                    >
-                        Current Model Details
-                    </Button>
+
+                {/* Inline dropdown for model parameters */}
+                <ModelInfoDropdown patient={{ id: patientId } as any} bayesianParam={bayesianParam} />
 
                 {lastUpdate && (
                     <p className="mt-2 text-green-700 font-medium">Last model update: {formatDateTime(lastUpdate)}</p>
