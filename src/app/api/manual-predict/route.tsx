@@ -35,7 +35,7 @@ export async function POST(req: Request) {
     const { id, params, y_init, future_actions } = data;
 
     // Try to load recommended prediction results from file first
-    let recommendedResults = await loadRecommendedPredictionResults(String(id));
+    const recommendedResults = await loadRecommendedPredictionResults(String(id));
 
     let results = null;
 
