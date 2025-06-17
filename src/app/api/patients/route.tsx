@@ -45,12 +45,13 @@ export async function POST(req: Request) {
     // Mock Bayesian model registration
     newPatient.modelBayesian.modelUri = generateMockModelUri(newPatient.modelBayesian.modelAlias);
     mockModelParams[newPatient.modelBayesian.modelAlias] = {
-      alpha: 0.8,
-      beta: 0.2,
-      gamma: 0.5,
-      delta: 1.2,
-      eta: 0.1,
-      zeta: 0.9,
+      a: 0.7,
+      b: 0.15,
+      c: 1.8,
+      noise_scale: 0.3,
+      sig_slope: 0.2,
+      sig_offset: -3.0,
+      error_scale: 0.0,
     };
 
     // Push new patient to existing patients JSON.
@@ -99,20 +100,38 @@ export async function PUT(req: Request) {
 
     // Mock Bayesian model update
     console.log("Updating Bayes Model");
-    const newBayesAlias = `${data.aliasBayesian}_updated`;
+    // Use a time-based version for the model alias, but do not keep appending suffixes
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
+    // Remove any previous _vYYYYMMDD_HHMMSS suffix from the alias
+    const baseAlias = data.aliasBayesian.replace(/_v\d{8}_\d{6}$/, "");
+    const newBayesAlias = `${baseAlias}_v${timestamp}`;
     patient.modelBayesian.modelAlias = newBayesAlias;
     patient.modelBayesian.modelUri = generateMockModelUri(newBayesAlias);
 
     // Update mock Bayesian parameters
-    const mockParams = mockModelParams[data.aliasBayesian] || {
-      alpha: 0.8,
-      beta: 0.2,
-      gamma: 0.5,
-      delta: 1.2,
-      eta: 0.1,
-      zeta: 0.9,
+    // Generate new random parameters for each update in the correct format
+    function randomizeParam(base: number, spread: number = 0.2) {
+      return +(base + (Math.random() - 0.5) * spread).toFixed(3);
+    }
+    const prevParams = mockModelParams[data.aliasBayesian] || {
+      a: 0.7,
+      b: 0.15,
+      c: 1.8,
+      noise_scale: 0.3,
+      sig_slope: 0.2,
+      sig_offset: -3.0,
+      error_scale: 0.0,
     };
-    mockModelParams[newBayesAlias] = mockParams;
+    mockModelParams[newBayesAlias] = {
+      a: randomizeParam(prevParams.a),
+      b: randomizeParam(prevParams.b),
+      c: randomizeParam(prevParams.c, 0.5),
+      noise_scale: randomizeParam(prevParams.noise_scale, 0.2),
+      sig_slope: randomizeParam(prevParams.sig_slope, 0.05),
+      sig_offset: randomizeParam(prevParams.sig_offset, 0.2),
+      error_scale: randomizeParam(prevParams.error_scale, 0.05),
+    };
 
     // Update the patient in the array
     patients[patientIndex] = patient;

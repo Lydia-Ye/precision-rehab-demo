@@ -27,6 +27,8 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const MAX_DOSE = 20;
+    const SIMULATED_DELAY = 5000; // 3 seconds delay
+    const ITERATIONS = 5; // Number of iterations to simulate
 
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -43,16 +45,24 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
         let interval: NodeJS.Timeout | null = null;
         if (updateLoading) {
             setProgress(0);
-            setStatusMessage("Updating prediction model...");
+            setStatusMessage("Initializing model update...");
+            
+            // Simulate the update process with different stages
+            const stages = [
+                { progress: 30, message: "Updating prediction model..." },
+                { progress: 80, message: "Finalizing update..." }
+            ];
+
+            let currentStage = 0;
             interval = setInterval(() => {
-                setProgress((prev) => {
-                    if (prev < 90) {
-                        return prev + 10;
-                    } else {
-                        return prev;
-                    }
-                });
-            }, 200);
+                if (currentStage < stages.length) {
+                    setProgress(stages[currentStage].progress);
+                    setStatusMessage(stages[currentStage].message);
+                    currentStage++;
+                } else {
+                    clearInterval(interval!);
+                }
+            }, SIMULATED_DELAY / stages.length);
         } else {
             setProgress(100);
             setTimeout(() => setProgress(0), 400);
@@ -75,6 +85,13 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
         setUpdateLoading(true);
         setStatusMessage("Updating prediction model...");
         try {
+            // Simulate the update process with delay
+            await new Promise(resolve => setTimeout(resolve, SIMULATED_DELAY));
+            
+            // Randomly select an iteration number for the model parameters
+            const selectedIteration = Math.floor(Math.random() * ITERATIONS) + 1;
+            console.log(`Selected model parameters from iteration ${selectedIteration}`);
+            
             await updateModels(MAX_DOSE, sgld);
             updateModelTimestamp();
             const now = new Date().toISOString();
