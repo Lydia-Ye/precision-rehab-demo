@@ -155,7 +155,7 @@ export const generatePredictionResults = async (
     // If no specific parameters found, use a default set based on real data patterns
     return {
       a: 0.7, // State transition parameter
-      b: 0.15, // Action effect parameter
+      b: 0.85, // Action effect parameter
       c: 1.8, // Outcome effect parameter
       noise: 0.3
     };
@@ -220,93 +220,112 @@ export const generateManualScheduleResults = async (
   patientId: string | undefined,
   y_init: number,
   futureActions: number[],
-  params: Record<string, number>[]
+  params: Record<string, number>[],
+  recommendedActions?: number[],
+  recommendedPredictions?: { mean: number[]; min: number[]; max: number[] },
 ) => {
-  // Constants from the real model
-  const MAX_MAL = 5.0; // Maximum MAL score
-  const SIG_SLOPE = 0.2; // Sigmoid slope parameter
-  const SIG_OFFSET = -3; // Sigmoid offset parameter
+  // Use the last parameter set, as in the backend
+  const param = params[params.length - 1] || {};
 
-  // Helper function to convert outcome to state (mimicking the real model)
-  const outcomeToState = (y: number) => {
-    const sigmoidInput = Math.log(y / MAX_MAL) - Math.log(1 - y / MAX_MAL);
-    return (sigmoidInput - SIG_OFFSET) / SIG_SLOPE;
-  };
+  // Optionally load patient-specific parameters (if you have such a function)
+  // If not, just use param directly.
+  // If you have a function like loadModelParamsFromFile, you can use it here.
+  // const fileParams = patientId ? await loadModelParamsFromFile(patientId) : null;
 
-  // Helper function to convert state to outcome (mimicking the real model)
-  const stateToOutcome = (x: number) => {
-    const sigmoid = 1 / (1 + Math.exp(-(SIG_SLOPE * x + SIG_OFFSET)));
-    return MAX_MAL * sigmoid;
-  };
+  // Use parameters from param, fallback to defaults if missing
+  const a = param.a ?? 0.7;
+  const b = param.b ?? 0.15;
+  const c = param.c ?? 1.8;
+  const noise_scale = param.noise_scale ?? param.noise ?? 0.3;
+  const sig_slope = param.sig_slope ?? 0.2;
+  const sig_offset = param.sig_offset ?? -3;
+  const MAX_MAL = 5.0;
 
-  // Get model parameters from prediction results files
-  const getModelParams = async () => {
-    if (patientId) {
-      const fileParams = await loadModelParamsFromFile(patientId);
-      if (fileParams) {
-        return {
-          a: fileParams.a,
-          b: fileParams.b,
-          c: fileParams.c,
-          noise: fileParams.noise
-        };
-      }
+  // Helper functions for state <-> outcome
+  const outcomeToState = (y: number) => (Math.log(y / MAX_MAL) - sig_offset) / sig_slope;
+  const stateToOutcome = (x: number) => MAX_MAL * (1 / (1 + Math.exp(-(sig_slope * x + sig_offset))));
+
+  // Number of simulations for uncertainty bounds (backend uses 100+)
+  const NUM_SIMULATIONS = 100;
+
+  // Store all simulated trajectories
+  const allOutcomes = [];
+
+  for (let sim = 0; sim < NUM_SIMULATIONS; sim++) {
+    let state = outcomeToState(y_init);
+    let outcome = y_init;
+    let budget_to_go = futureActions.reduce((a, b) => a + b, 0);
+
+    const outcomes = [];
+    for (let i = 0; i < futureActions.length; i++) {
+      let action = futureActions[i];
+      if (budget_to_go < action) action = budget_to_go;
+      budget_to_go -= action;
+
+      // Gaussian noise, mean 0, stddev = noise_scale
+      const noise =
+        noise_scale > 0
+          ? (Math.sqrt(-2 * Math.log(Math.random())) * Math.cos(2 * Math.PI * Math.random())) * noise_scale
+          : 0;
+
+      // State transition
+      state = a * state + b * action + c * outcome + noise;
+      outcome = stateToOutcome(state);
+
+      // Clamp outcome
+      outcome = Math.max(0, Math.min(MAX_MAL, outcome));
+      outcomes.push(outcome);
     }
-    
-    // If no specific parameters found, use a default set based on real data patterns
-    return {
-      a: 0.7,
-      b: 0.15,
-      c: 1.8,
-      noise: 0.3
-    };
-  };
-
-  // Calculate the next state based on current state, action, and parameters
-  const calculateNextState = async (currentState: number, action: number, param: Record<string, number>) => {
-    // Get the actual model parameters from files if available
-    const modelParams = await getModelParams();
-    
-    // Use the provided parameters if they have the right format, otherwise use file parameters
-    const a = param.alpha || param.a || modelParams.a;
-    const b = param.beta || param.b || modelParams.b;
-    const c = param.gamma || param.c || modelParams.c;
-    const noise = (Math.random() - 0.5) * (param.delta || param.noise || modelParams.noise);
-    
-    // State transition equation from the real model
-    return a * currentState + b * action + c * y_init + noise;
-  };
-
-  // Generate predictions for future outcomes
-  const futureOutcomes = [];
-  for (let i = 0; i < futureActions.length; i++) {
-    // Use the corresponding parameter set for this prediction
-    const param = params[i % params.length];
-    
-    // Convert current outcome to state
-    const currentState = outcomeToState(y_init);
-    
-    // Calculate next state
-    const nextState = await calculateNextState(currentState, futureActions[i], param);
-    
-    // Convert back to outcome
-    const nextOutcome = stateToOutcome(nextState);
-    
-    // Ensure outcome stays within reasonable bounds (0 to MAX_MAL)
-    futureOutcomes.push(Math.max(0, Math.min(MAX_MAL, nextOutcome)));
+    allOutcomes.push(outcomes);
   }
 
-  // Calculate uncertainty bounds (similar to the real model's 95% confidence intervals)
-  const maxOutcomes = futureOutcomes.map(outcome => 
-    Math.min(MAX_MAL, outcome + 0.2 + Math.random() * 0.1)
-  );
-  const minOutcomes = futureOutcomes.map(outcome => 
-    Math.max(0, outcome - 0.2 - Math.random() * 0.1)
-  );
+  // Convert allOutcomes to shape [NUM_SIMULATIONS, futureActions.length]
+  // Compute percentiles for min/max, and median for main prediction
+  const getPercentile = (arr: number[], p: number) => {
+    const sorted = [...arr].sort((a, b) => a - b);
+    const idx = (p / 100) * (sorted.length - 1);
+    const lower = Math.floor(idx);
+    const upper = Math.ceil(idx);
+    if (lower === upper) return sorted[lower];
+    return sorted[lower] + (sorted[upper] - sorted[lower]) * (idx - lower);
+  };
+
+  // For each time step, collect all outcomes and compute percentiles
+  const nSteps = futureActions.length;
+  let future_outcomes: number[] = [];
+  let min_outcomes: number[] = [];
+  let max_outcomes: number[] = [];
+
+  for (let t = 0; t < nSteps; t++) {
+    const stepOutcomes = allOutcomes.map((traj) => traj[t]);
+    // Median for main prediction
+    future_outcomes.push(getPercentile(stepOutcomes, 50));
+    // 2.5th and 97.5th percentiles for bounds
+    min_outcomes.push(getPercentile(stepOutcomes, 2.5));
+    max_outcomes.push(getPercentile(stepOutcomes, 97.5));
+  }
+
+  // --- Normalization/Blending Step ---
+  if (
+    recommendedActions &&
+    recommendedPredictions &&
+    recommendedActions.length === futureActions.length &&
+    recommendedPredictions.mean.length === nSteps
+  ) {
+    const blend = (manual: number[], recommended: number[], actionsA: number[], actionsB: number[]) =>
+      manual.map((val, i) => {
+        const sim = 1 - Math.min(1, Math.abs(actionsA[i] - actionsB[i]) / 30);
+        // If sim==1, use recommended; if sim==0, use manual; else blend
+        return sim * recommended[i] + (1 - sim) * val;
+      });
+    future_outcomes = blend(future_outcomes, recommendedPredictions.mean, futureActions, recommendedActions);
+    min_outcomes = blend(min_outcomes, recommendedPredictions.min, futureActions, recommendedActions);
+    max_outcomes = blend(max_outcomes, recommendedPredictions.max, futureActions, recommendedActions);
+  }
 
   return {
-    future_outcomes: futureOutcomes,
-    max_outcomes: maxOutcomes,
-    min_outcomes: minOutcomes,
+    future_outcomes,
+    min_outcomes,
+    max_outcomes,
   };
-}; 
+};

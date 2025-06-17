@@ -1,32 +1,32 @@
 import { NextResponse } from "next/server";
-// import fs from "fs/promises";
-// import path from "path";
+import fs from "fs/promises";
+import path from "path";
 import { generateManualScheduleResults } from "@/mock/resultsGenerator";
 
-// Helper function to load manual prediction results from file
-// async function loadManualPredictionResults(patientId: string) {
-//   try {
-//     const resultsPath = path.join(
-//       process.cwd(),
-//       "src/mock/prediction_results",
-//       patientId,
-//       `manual_schedule_results_${patientId}.json`
-//     );
-    
-//     const resultsData = await fs.readFile(resultsPath, "utf-8");
-//     const results = JSON.parse(resultsData);
-    
-//     return {
-//       maxPrediction: results.max_outcomes,
-//       minPrediction: results.min_outcomes,
-//       meanPrediction: results.median_trajectory,
-//       dosage: results.median_actions,
-//     };
-//   } catch (error) {
-//     console.log(`Failed to load manual prediction results for patient ${patientId}:`, error);
-//     return null;
-//   }
-// }
+// Helper function to load recommended prediction results from file
+async function loadRecommendedPredictionResults(patientId: string) {
+  try {
+    const resultsPath = path.join(
+      process.cwd(),
+      "src/mock/prediction_results",
+      patientId,
+      `recommended_schedule_results_${patientId}.json`
+    );
+
+    const resultsData = await fs.readFile(resultsPath, "utf-8");
+    const results = JSON.parse(resultsData);
+
+    return {
+      maxPrediction: results.maxPrediction,
+      minPrediction: results.minPrediction,
+      meanPrediction: results.meanPrediction,
+      dosage: results.dosage,
+    };
+  } catch (error) {
+    console.log(`Failed to load recommended prediction results for patient ${patientId}:`, error);
+    return null;
+  }
+}
 
 export async function POST(req: Request) {
   try {
@@ -34,29 +34,45 @@ export async function POST(req: Request) {
 
     const { id, params, y_init, future_actions } = data;
 
-    // Try to load manual prediction results from file first
-    // let results = await loadManualPredictionResults(String(id));
-    
-    // If file loading fails, fall back to generating manual results
-    // if (!results) {
-      const manualResults = await generateManualScheduleResults(
+    // Try to load recommended prediction results from file first
+    let recommendedResults = await loadRecommendedPredictionResults(String(id));
+
+    let results = null;
+
+    if (recommendedResults) {
+      results = await generateManualScheduleResults(
+        String(id),
+        y_init,
+        future_actions,
+        params,
+        recommendedResults.dosage,
+        // array of min, max, mean predictions
+        {
+          min: recommendedResults.minPrediction,
+          mean: recommendedResults.meanPrediction,
+          max: recommendedResults.maxPrediction
+        }
+      )
+    } else {
+      results = await generateManualScheduleResults(
         String(id),
         y_init,
         future_actions,
         params
-    );
-    
+      )
+    }
+
     // Map the results to match the expected format
-    const results = {
-      maxPrediction: manualResults.max_outcomes,
-      minPrediction: manualResults.min_outcomes,
-      meanPrediction: manualResults.future_outcomes,
+    results = {
+      maxPrediction: results.max_outcomes,
+      minPrediction: results.min_outcomes,
+      meanPrediction: results.future_outcomes,
       dosage: future_actions,
     };
 
     return NextResponse.json(results);
   } catch (error) {
-    console.error("Manual prediction error:", error);
-    return NextResponse.json({ error: "Failed to generate manual predictions" }, { status: 500 });
-  }
+  console.error("Manual prediction error:", error);
+  return NextResponse.json({ error: "Failed to generate manual predictions" }, { status: 500 });
+}
 } 
