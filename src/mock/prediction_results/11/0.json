@@ -4,10 +4,10 @@
     "timestamp": "20250616_225000",
     "schedule_type": "recommended",
     "last_param": {
-      "a": 0.44839197397232056,
-      "b": 0.22822313010692596,
-      "c": 2.3006067276000977,
-      "noise_scale": 0.5894827246665955,
+      "a": 0.459,
+      "b": 0.195,
+      "c": 2.293,
+      "noise_scale": 0.5986,
       "sig_slope": 0.2,
       "sig_offset": -3.0,
       "error_scale": 0.0
@@ -73,10 +73,10 @@
     "timestamp": "20250616_225004",
     "schedule_type": "recommended",
     "last_param": {
-      "a": 0.416,
-      "b": 0.256,
-      "c": 2.322,
-      "noise_scale": 0.5894827246665955,
+      "a": 0.459,
+      "b": 0.195,
+      "c": 2.293,
+      "noise_scale": 0.5986,
       "sig_slope": 0.2,
       "sig_offset": -3.0,
       "error_scale": 0.0
@@ -142,10 +142,10 @@
     "timestamp": "20250616_225008",
     "schedule_type": "recommended",
     "last_param": {
-      "a": 0.44,
-      "b": 0.225,
-      "c": 2.269,
-      "noise_scale": 0.5894827246665955,
+      "a": 0.459,
+      "b": 0.195,
+      "c": 2.293,
+      "noise_scale": 0.5986,
       "sig_slope": 0.2,
       "sig_offset": -3.0,
       "error_scale": 0.0
@@ -211,10 +211,10 @@
     "timestamp": "20250616_225012",
     "schedule_type": "recommended",
     "last_param": {
-      "a": 0.434,
-      "b": 0.272,
-      "c": 2.301,
-      "noise_scale": 0.5894827246665955,
+      "a": 0.459,
+      "b": 0.195,
+      "c": 2.293,
+      "noise_scale": 0.5986,
       "sig_slope": 0.2,
       "sig_offset": -3.0,
       "error_scale": 0.0
@@ -283,7 +283,7 @@
       "a": 0.459,
       "b": 0.195,
       "c": 2.293,
-      "noise_scale": 0.5894827246665955,
+      "noise_scale": 0.5986,
       "sig_slope": 0.2,
       "sig_offset": -3.0,
       "error_scale": 0.0
