@@ -23,12 +23,32 @@ async function loadPredictionResults(patientId: string) {
     const resultsData = await fs.readFile(resultsPath, "utf-8");
     const results = JSON.parse(resultsData);
     
-    return {
-      maxPrediction: results.maxPrediction,
-      minPrediction: results.minPrediction,
-      meanPrediction: results.meanPrediction,
-      dosage: results.dosage,
-    };
+    // Check if the file has the new structure with iterations
+    if (results.iter_1) {
+      // New structure: randomly select one iteration
+      const iterations = Object.keys(results).filter(key => key.startsWith('iter_'));
+      if (iterations.length > 0) {
+        const randomIterKey = iterations[Math.floor(Math.random() * iterations.length)];
+        const selectedIteration = results[randomIterKey];
+        
+        return {
+          maxPrediction: selectedIteration.maxPrediction,
+          minPrediction: selectedIteration.minPrediction,
+          meanPrediction: selectedIteration.meanPrediction,
+          dosage: selectedIteration.dosage,
+        };
+      }
+    } else {
+      // Old structure: use the data directly
+      return {
+        maxPrediction: results.maxPrediction,
+        minPrediction: results.minPrediction,
+        meanPrediction: results.meanPrediction,
+        dosage: results.dosage,
+      };
+    }
+    
+    return null;
   } catch (error) {
     console.log(`Failed to load prediction results for patient ${patientId}:`, error);
     return null;

@@ -16,16 +16,39 @@ async function loadModelParamsFromFile(patientId: string) {
       const resultsData = await fs.readFile(recommendedPath, "utf-8");
       const results = JSON.parse(resultsData);
       
-      if (results.last_param) {
-        return {
-          a: results.last_param.a,
-          b: results.last_param.b,
-          c: results.last_param.c,
-          noise: results.last_param.noise_scale,
-          sig_slope: results.last_param.sig_slope,
-          sig_offset: results.last_param.sig_offset,
-          error_scale: results.last_param.error_scale
-        };
+      // Check if the file has the new structure with iterations
+      if (results.iter_1) {
+        // New structure: randomly select one iteration
+        const iterations = Object.keys(results).filter(key => key.startsWith('iter_'));
+        if (iterations.length > 0) {
+          const randomIterKey = iterations[Math.floor(Math.random() * iterations.length)];
+          const selectedIteration = results[randomIterKey];
+          
+          if (selectedIteration.last_param) {
+            return {
+              a: selectedIteration.last_param.a,
+              b: selectedIteration.last_param.b,
+              c: selectedIteration.last_param.c,
+              noise: selectedIteration.last_param.noise_scale,
+              sig_slope: selectedIteration.last_param.sig_slope,
+              sig_offset: selectedIteration.last_param.sig_offset,
+              error_scale: selectedIteration.last_param.error_scale
+            };
+          }
+        }
+      } else {
+        // Old structure: use the data directly
+        if (results.last_param) {
+          return {
+            a: results.last_param.a,
+            b: results.last_param.b,
+            c: results.last_param.c,
+            noise: results.last_param.noise_scale,
+            sig_slope: results.last_param.sig_slope,
+            sig_offset: results.last_param.sig_offset,
+            error_scale: results.last_param.error_scale
+          };
+        }
       }
     } catch {
       // If recommended file doesn't exist, try manual schedule results
@@ -39,19 +62,46 @@ async function loadModelParamsFromFile(patientId: string) {
       `manual_schedule_results_${patientId}.json`
     );
     
-    const resultsData = await fs.readFile(manualPath, "utf-8");
-    const results = JSON.parse(resultsData);
-    
-    if (results.last_param) {
-      return {
-        a: results.last_param.a,
-        b: results.last_param.b,
-        c: results.last_param.c,
-        noise: results.last_param.noise_scale,
-        sig_slope: results.last_param.sig_slope,
-        sig_offset: results.last_param.sig_offset,
-        error_scale: results.last_param.error_scale
-      };
+    try {
+      const resultsData = await fs.readFile(manualPath, "utf-8");
+      const results = JSON.parse(resultsData);
+      
+      // Check if the file has the new structure with iterations
+      if (results.iter_1) {
+        // New structure: randomly select one iteration
+        const iterations = Object.keys(results).filter(key => key.startsWith('iter_'));
+        if (iterations.length > 0) {
+          const randomIterKey = iterations[Math.floor(Math.random() * iterations.length)];
+          const selectedIteration = results[randomIterKey];
+          
+          if (selectedIteration.last_param) {
+            return {
+              a: selectedIteration.last_param.a,
+              b: selectedIteration.last_param.b,
+              c: selectedIteration.last_param.c,
+              noise: selectedIteration.last_param.noise_scale,
+              sig_slope: selectedIteration.last_param.sig_slope,
+              sig_offset: selectedIteration.last_param.sig_offset,
+              error_scale: selectedIteration.last_param.error_scale
+            };
+          }
+        }
+      } else {
+        // Old structure: use the data directly
+        if (results.last_param) {
+          return {
+            a: results.last_param.a,
+            b: results.last_param.b,
+            c: results.last_param.c,
+            noise: results.last_param.noise_scale,
+            sig_slope: results.last_param.sig_slope,
+            sig_offset: results.last_param.sig_offset,
+            error_scale: results.last_param.error_scale
+          };
+        }
+      }
+    } catch {
+      // If manual file doesn't exist, return null
     }
     
     return null;
