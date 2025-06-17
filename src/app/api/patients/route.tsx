@@ -100,12 +100,9 @@ export async function PUT(req: Request) {
 
     // Mock Bayesian model update
     console.log("Updating Bayes Model");
-    // Use a time-based version for the model alias, but do not keep appending suffixes
-    const now = new Date();
-    const timestamp = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2, '0')}${now.getDate().toString().padStart(2, '0')}_${now.getHours().toString().padStart(2, '0')}${now.getMinutes().toString().padStart(2, '0')}${now.getSeconds().toString().padStart(2, '0')}`;
-    // Remove any previous _vYYYYMMDD_HHMMSS suffix from the alias
-    const baseAlias = data.aliasBayesian.replace(/_v\d{8}_\d{6}$/, "");
-    const newBayesAlias = `${baseAlias}_v${timestamp}`;
+    // Use the current modelId as the suffix, replacing any previous _v... or _[number] suffix
+    const baseAlias = data.aliasBayesian.replace(/(_v\d{8}_\d{6}|_\d+)?$/, "");
+    const newBayesAlias = `${baseAlias}_${data.modelId}`;
     patient.modelBayesian.modelAlias = newBayesAlias;
     patient.modelBayesian.modelUri = generateMockModelUri(newBayesAlias);
 
