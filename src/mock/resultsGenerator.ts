@@ -1,7 +1,13 @@
 import { mockModelParams } from './modelParams';
 
 // Helper function to generate mock results
-export const generatePredictionResults = (patientId: string | undefined, budget: number, horizon: number, y_init: number, maxDose: number) => {
+export const generatePredictionResults = (
+  patientId: string | undefined, 
+  budget: number, 
+  horizon: number, 
+  y_init: number, 
+  maxDose: number,
+) => {
   // Constants from the real model
   const MAX_MAL = 5.0; // Maximum MAL score
   const SIG_SLOPE = 0.2; // Sigmoid slope parameter
@@ -104,7 +110,6 @@ export const generatePredictionResults = (patientId: string | undefined, budget:
 // Helper function to generate predictions for manual schedules
 export const generateManualScheduleResults = (
   y_init: number,
-  pastActions: number[],
   futureActions: number[],
   params: Record<string, number>[]
 ) => {
