@@ -35,6 +35,7 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
   const [showManualScheduleForm, setShowManualScheduleForm] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const [modelId, setModelId] = useState('0');
   const [bayesianParam, setBayesianParam] = useState<Record<string, number> | null>(null);
   const [selectedModels, setSelectedModels] = useState({
     bayesian: false,
@@ -45,7 +46,7 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
   useEffect(() => {
     async function fetchParams() {
       if (patient && patient.id) {
-        const response = await fetch(`/api/model-params/${patient.id}`);
+        const response = await fetch(`/api/model-params/${patient.id}?modelId=${modelId}`);
         if (response.ok) {
           setBayesianParam(await response.json());
         } else {
@@ -56,7 +57,13 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
       }
     }
     fetchParams();
-  }, [patient]);
+  }, [patient, modelId]);
+
+  useEffect(() => {
+    // Fetch prediction results for the selected modelId when it changes
+    getResults(false);
+    // Optionally, you could also clear or update sgldPrediction if needed
+  }, [modelId]);
 
   // Closes dropdown element on clicking outside the component.
   useEffect(() => {
@@ -132,12 +139,13 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
   const getResults = async (sgld: boolean) => {
     try {
       // setDropdownOpen(false);
-      const requestBody: ResultsPostRequest = {
+      const requestBody: ResultsPostRequest & { modelId: string } = {
         id: patient.id,
         alias: sgld ? patient.modelSGLD.modelAlias : patient.modelBayesian.modelAlias,
         budget: patient.budget - pastDoseData.reduce((acc, curr) => acc + curr, 0),
         horizon: patient.horizon - pastAvgOut.length + 1,
         y_init: pastAvgOut.at(-1),
+        modelId: modelId,
       };
       const res = await fetch("/api/results", {
         method: "POST",
@@ -528,9 +536,13 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
             className="mt-4"
             variant="danger"
             onClick={() => clearGraph()}
-            style={{ display: (bayesianPrediction.futureAvgOut.length > 0 || 
-                              sgldPrediction.futureAvgOut.length > 0 || 
-                              manualPrediction.futureAvgOut.length > 0) ? 'block' : 'none' }}
+            style={{
+              display: (
+                bayesianPrediction?.futureAvgOut?.length > 0 ||
+                sgldPrediction?.futureAvgOut?.length > 0 ||
+                manualPrediction?.futureAvgOut?.length > 0
+              ) ? 'block' : 'none'
+            }}
           >
             Clear Prediction
           </Button>
@@ -585,6 +597,16 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
           </div>
         </div>
       </main>
+
+      {/* Model ID Selector */}
+      <div className="mb-4">
+        <label htmlFor="modelId" className="mr-2 font-semibold">Select Model ID:</label>
+        <select id="modelId" value={modelId} onChange={e => setModelId(e.target.value)} className="border rounded px-2 py-1">
+          {[0,1,2,3,4,5,6,7,8,9].map(id => (
+            <option key={id} value={id}>{id}</option>
+          ))}
+        </select>
+      </div>
     </>
   );
 }

@@ -22,6 +22,7 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
     const [progress, setProgress] = useState(0);
     const [statusMessage, setStatusMessage] = useState("");
     const [lastUpdate, setLastUpdate] = useState<string | null>(null);
+    const [modelId, setModelId] = useState('0');
     const [bayesianParam, setBayesianParam] = useState<Record<string, number> | null>(null);
 
     // Dropdown state.
@@ -31,14 +32,14 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
     const SIMULATED_DELAY = 5000; // 3 seconds delay
     const ITERATIONS = 5; // Number of iterations to simulate
 
-    // Fetch bayesianParam for this patientId
+    // Fetch bayesianParam for this patientId and modelId
     useEffect(() => {
         if (!patientId) return;
-        fetch(`/api/model-params/${patientId}`)
+        fetch(`/api/model-params/${patientId}?modelId=${modelId}`)
             .then(res => res.ok ? res.json() : null)
             .then(data => setBayesianParam(data))
             .catch(() => setBayesianParam(null));
-    }, [patientId, lastUpdate]);
+    }, [patientId, lastUpdate, modelId]);
 
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -135,6 +136,16 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
                 <p>
                     The model learns from each observed dose and outcome, updating its predictions using Bayesian reinforcement learning to support personalized rehabilitation planning.
                 </p>
+
+                {/* Model ID Selector */}
+                <div className="mb-4">
+                    <label htmlFor="modelId" className="mr-2 font-semibold">Select Model ID:</label>
+                    <select id="modelId" value={modelId} onChange={e => setModelId(e.target.value)} className="border rounded px-2 py-1">
+                        {[0,1,2,3,4,5,6,7,8,9].map(id => (
+                            <option key={id} value={id}>{id}</option>
+                        ))}
+                    </select>
+                </div>
 
                 {/* Inline dropdown for model parameters */}
                 <ModelInfoDropdown bayesianParam={bayesianParam} />
