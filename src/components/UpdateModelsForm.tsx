@@ -101,6 +101,8 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
             const now = new Date().toISOString();
             setLastUpdate(now);
             localStorage.setItem(`lastModelUpdate_${patientId}`, now);
+            // Wait for the simulated delay to allow progress messages to show
+            await new Promise(resolve => setTimeout(resolve, SIMULATED_DELAY));
         } catch (error) {
             console.error(error);
         } finally {
