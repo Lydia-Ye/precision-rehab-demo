@@ -698,8 +698,7 @@
     }
   },
   {
-    "id": "18",
-    "name": "Patient 18",
+    "name": "18",
     "budget": 60,
     "maxDose": 20,
     "age": 80,
