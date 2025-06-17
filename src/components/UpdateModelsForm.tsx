@@ -9,7 +9,6 @@ interface UpdateModelsFormProps {
     updateModels: (newMaxDose: number, sgld: boolean) => Promise<void>;
     updateModelTimestamp: () => void;
     patientId: string;
-    setShowModelInfo: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function formatDateTime(dateString: string) {
@@ -17,7 +16,7 @@ function formatDateTime(dateString: string) {
     return date.toLocaleString();
 }
 
-export default function UpdateModelsForm({ setShowForm, updateModels, updateModelTimestamp, patientId, setShowModelInfo }: UpdateModelsFormProps) {
+export default function UpdateModelsForm({ setShowForm, updateModels, updateModelTimestamp, patientId }: UpdateModelsFormProps) {
     // Loading for updating patient models.
     const [updateLoading, setUpdateLoading] = useState(false);
     const [progress, setProgress] = useState(0);
@@ -138,7 +137,7 @@ export default function UpdateModelsForm({ setShowForm, updateModels, updateMode
                 </p>
 
                 {/* Inline dropdown for model parameters */}
-                <ModelInfoDropdown patient={{ id: patientId } as any} bayesianParam={bayesianParam} />
+                <ModelInfoDropdown bayesianParam={bayesianParam} />
 
                 {lastUpdate && (
                     <p className="mt-2 text-green-700 font-medium">Last model update: {formatDateTime(lastUpdate)}</p>

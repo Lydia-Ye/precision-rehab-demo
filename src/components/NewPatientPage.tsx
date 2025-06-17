@@ -31,7 +31,6 @@ interface ModelPrediction {
 export default function NewPatientPage({ patient, setPatient }: PatientPageProps) {
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [showUploadForm, setShowUploadForm] = useState(false);
-  const [showModelInfo, setShowModelInfo] = useState(false);
   const [showPatientEdit, setShowPatientEdit] = useState(false);
   const [showManualScheduleForm, setShowManualScheduleForm] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -328,7 +327,6 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
               updateModels={updateModels}
               updateModelTimestamp={updateModelTimestamp}
               patientId={patient.id}
-              setShowModelInfo={setShowModelInfo}
             />
           </div>
         </div>

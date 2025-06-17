@@ -1,12 +1,10 @@
 import { useState } from "react";
-import { Patient } from "@/types/patient";
 
 interface ModelInfoDropdownProps {
-  patient: Patient;
   bayesianParam?: Record<string, number> | null;
 }
 
-export default function ModelInfoDropdown({ patient, bayesianParam }: ModelInfoDropdownProps) {
+export default function ModelInfoDropdown({ bayesianParam }: ModelInfoDropdownProps) {
   const [open, setOpen] = useState(false);
   const group1 = ["a", "b", "c"];
   const group2 = ["noise_scale", "sig_slope", "sig_offset", "error_scale"];
