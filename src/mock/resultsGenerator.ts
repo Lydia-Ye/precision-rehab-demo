@@ -1,7 +1,68 @@
-import { mockModelParams } from './modelParams';
+import fs from 'fs/promises';
+import path from 'path';
+
+// Helper function to load model parameters from prediction results files
+async function loadModelParamsFromFile(patientId: string) {
+  try {
+    // Try to load from recommended schedule results first
+    const recommendedPath = path.join(
+      process.cwd(),
+      "src/mock/prediction_results",
+      patientId,
+      `recommended_schedule_results_${patientId}.json`
+    );
+    
+    try {
+      const resultsData = await fs.readFile(recommendedPath, "utf-8");
+      const results = JSON.parse(resultsData);
+      
+      if (results.last_param) {
+        return {
+          a: results.last_param.a,
+          b: results.last_param.b,
+          c: results.last_param.c,
+          noise: results.last_param.noise_scale,
+          sig_slope: results.last_param.sig_slope,
+          sig_offset: results.last_param.sig_offset,
+          error_scale: results.last_param.error_scale
+        };
+      }
+    } catch {
+      // If recommended file doesn't exist, try manual schedule results
+    }
+
+    // Try to load from manual schedule results
+    const manualPath = path.join(
+      process.cwd(),
+      "src/mock/prediction_results",
+      patientId,
+      `manual_schedule_results_${patientId}.json`
+    );
+    
+    const resultsData = await fs.readFile(manualPath, "utf-8");
+    const results = JSON.parse(resultsData);
+    
+    if (results.last_param) {
+      return {
+        a: results.last_param.a,
+        b: results.last_param.b,
+        c: results.last_param.c,
+        noise: results.last_param.noise_scale,
+        sig_slope: results.last_param.sig_slope,
+        sig_offset: results.last_param.sig_offset,
+        error_scale: results.last_param.error_scale
+      };
+    }
+    
+    return null;
+  } catch (error) {
+    console.log(`Failed to load model parameters for patient ${patientId}:`, error);
+    return null;
+  }
+}
 
 // Helper function to generate mock results
-export const generatePredictionResults = (
+export const generatePredictionResults = async (
   patientId: string | undefined, 
   budget: number, 
   horizon: number, 
@@ -26,34 +87,33 @@ export const generatePredictionResults = (
     return MAX_MAL * sigmoid;
   };
 
-  // Get model parameters from mock data
-  const getModelParams = () => {
-    // If we have a patient ID, try to get their specific parameters
+  // Get model parameters from prediction results files
+  const getModelParams = async () => {
+    // If we have a patient ID, try to get their specific parameters from files
     if (patientId) {
-      const modelAlias = `${patientId}_Patient_${patientId}_bayes_version_1`;
-      const params = mockModelParams[modelAlias];
+      const params = await loadModelParamsFromFile(patientId);
       if (params) {
         return {
-          a: params.alpha,
-          b: params.beta,
-          c: params.gamma,
-          noise: params.delta * 0.1 // Scale down delta for noise
+          a: params.a,
+          b: params.b,
+          c: params.c,
+          noise: params.noise * 0.1 // Scale down noise for ensemble
         };
       }
     }
     
-    // If no specific parameters found, use a default set
+    // If no specific parameters found, use a default set based on real data patterns
     return {
-      a: 0.8,
-      b: 0.2,
-      c: 0.1,
-      noise: 0.1
+      a: 0.7, // State transition parameter
+      b: 0.15, // Action effect parameter
+      c: 1.8, // Outcome effect parameter
+      noise: 0.3
     };
   };
 
   // Generate predictions for each model in the ensemble
+  const params = await getModelParams();
   const ensemblePredictions = Array.from({ length: NUM_SIMULATIONS }, () => {
-    const params = getModelParams();
     const outcomes = [y_init];
     const actions = [];
     let remainingBudget = budget;
@@ -106,7 +166,8 @@ export const generatePredictionResults = (
 };
 
 // Helper function to generate predictions for manual schedules
-export const generateManualScheduleResults = (
+export const generateManualScheduleResults = async (
+  patientId: string | undefined,
   y_init: number,
   futureActions: number[],
   params: Record<string, number>[]
@@ -128,20 +189,47 @@ export const generateManualScheduleResults = (
     return MAX_MAL * sigmoid;
   };
 
+  // Get model parameters from prediction results files
+  const getModelParams = async () => {
+    if (patientId) {
+      const fileParams = await loadModelParamsFromFile(patientId);
+      if (fileParams) {
+        return {
+          a: fileParams.a,
+          b: fileParams.b,
+          c: fileParams.c,
+          noise: fileParams.noise
+        };
+      }
+    }
+    
+    // If no specific parameters found, use a default set based on real data patterns
+    return {
+      a: 0.7,
+      b: 0.15,
+      c: 1.8,
+      noise: 0.3
+    };
+  };
+
   // Calculate the next state based on current state, action, and parameters
-  const calculateNextState = (currentState: number, action: number, param: Record<string, number>) => {
-    // Use the mock parameters if available, otherwise use defaults
-    const a = param.alpha || 0.8;
-    const b = param.beta || 0.2;
-    const c = param.gamma || 0.1;
-    const noise = (Math.random() - 0.5) * (param.delta || 0.1);
+  const calculateNextState = async (currentState: number, action: number, param: Record<string, number>) => {
+    // Get the actual model parameters from files if available
+    const modelParams = await getModelParams();
+    
+    // Use the provided parameters if they have the right format, otherwise use file parameters
+    const a = param.alpha || param.a || modelParams.a;
+    const b = param.beta || param.b || modelParams.b;
+    const c = param.gamma || param.c || modelParams.c;
+    const noise = (Math.random() - 0.5) * (param.delta || param.noise || modelParams.noise);
     
     // State transition equation from the real model
     return a * currentState + b * action + c * y_init + noise;
   };
 
   // Generate predictions for future outcomes
-  const futureOutcomes = futureActions.map((dose, i) => {
+  const futureOutcomes = [];
+  for (let i = 0; i < futureActions.length; i++) {
     // Use the corresponding parameter set for this prediction
     const param = params[i % params.length];
     
@@ -149,14 +237,14 @@ export const generateManualScheduleResults = (
     const currentState = outcomeToState(y_init);
     
     // Calculate next state
-    const nextState = calculateNextState(currentState, dose, param);
+    const nextState = await calculateNextState(currentState, futureActions[i], param);
     
     // Convert back to outcome
     const nextOutcome = stateToOutcome(nextState);
     
     // Ensure outcome stays within reasonable bounds (0 to MAX_MAL)
-    return Math.max(0, Math.min(MAX_MAL, nextOutcome));
-  });
+    futureOutcomes.push(Math.max(0, Math.min(MAX_MAL, nextOutcome)));
+  }
 
   // Calculate uncertainty bounds (similar to the real model's 95% confidence intervals)
   const maxOutcomes = futureOutcomes.map(outcome => 

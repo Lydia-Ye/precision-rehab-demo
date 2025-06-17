@@ -17,7 +17,6 @@ import { ResultsPostResponse } from "@/types/resultsPostResponse";
 import { PatientsPutRequest } from "@/types/patientsPutRequest";
 import Button from "./ui/Button";
 import Badge from "./ui/Badge";
-import { mockModelParams } from '@/mock/modelParams';
 
 interface PatientPageProps {
   patient: Patient;
@@ -38,18 +37,28 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
   const [showManualScheduleForm, setShowManualScheduleForm] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-const [bayesianParam, setBayesianParam] = useState<Record<string, number> | null>(null);
-const [selectedModels, setSelectedModels] = useState({
-  bayesian: false,
-  sgld: false,
-  manual: false,
-});
+  const [bayesianParam, setBayesianParam] = useState<Record<string, number> | null>(null);
+  const [selectedModels, setSelectedModels] = useState({
+    bayesian: false,
+    sgld: false,
+    manual: false,
+  });
 
-useEffect(() => {
-  const params = mockModelParams[patient.modelBayesian.modelAlias] || null;
-  setBayesianParam(params);
-}, [patient.modelBayesian.modelAlias]);
-
+  useEffect(() => {
+    async function fetchParams() {
+      if (patient && patient.id) {
+        const response = await fetch(`/api/model-params/${patient.id}`);
+        if (response.ok) {
+          setBayesianParam(await response.json());
+        } else {
+          setBayesianParam(null);
+        }
+      } else {
+        setBayesianParam(null);
+      }
+    }
+    fetchParams();
+  }, [patient]);
 
   // Closes dropdown element on clicking outside the component.
   useEffect(() => {
@@ -64,7 +73,6 @@ useEffect(() => {
 
   const [updateLoading, setUpdateLoading] = useState(false);
   const [updateProgress, setUpdateProgress] = useState(0);
-
 
   const [pastAvgOut, setPastAvgOut] = useState<number[]>(patient.outcomes);
   const [pastDoseData, setPastDoseData] = useState<number[]>(patient.actions);
@@ -180,7 +188,6 @@ useEffect(() => {
       if (!res.ok) throw new Error("Manual prediction failed");
 
       const data = await res.json();
-      console.log(data);
 
       setManualPrediction({
         maxOut: data.maxPrediction,

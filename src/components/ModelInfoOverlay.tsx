@@ -36,7 +36,7 @@ export default function ModelInfoOverlay({
             </div>
 
             {/* Model Parameters */}
-            {bayesianParam && (
+            {bayesianParam ? (
                 <div className="flex flex-col items-center mt-2">
                     <h3 className="font-semibold text-lg mb-2 text-center">Bayesian Model Parameters:</h3>
                     <ul className="text-base space-y-1 text-center">
@@ -46,6 +46,11 @@ export default function ModelInfoOverlay({
                             </li>
                         ))}
                     </ul>
+                </div>
+            ) : (
+                <div className="flex flex-col items-center mt-2">
+                    <h3 className="font-semibold text-lg mb-2 text-center">Bayesian Model Parameters:</h3>
+                    <p className="text-gray-500">No parameters available</p>
                 </div>
             )}
         </div>
