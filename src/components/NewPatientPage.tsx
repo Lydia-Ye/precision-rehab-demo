@@ -124,12 +124,6 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
     }
   }, [patient, pastDoseData, pastAvgOut, modelId]);
 
-  useEffect(() => {
-    // Fetch prediction results for the selected modelId when it changes
-    getResults(false);
-    // Optionally, you could also clear or update sgldPrediction if needed
-  }, [modelId, getResults]);
-
   // Closes dropdown element on clicking outside the component.
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
