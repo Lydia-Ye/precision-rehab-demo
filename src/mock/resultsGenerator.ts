@@ -2,18 +2,17 @@ import fs from 'fs/promises';
 import path from 'path';
 
 // Helper function to load model parameters from prediction results files
-async function loadModelParamsFromFile(patientId: string) {
+async function loadModelParamsFromFile(patientId: string, modelId: string = '0') {
   try {
-    // Try to load from recommended schedule results first
-    const recommendedPath = path.join(
+    const resultsPath = path.join(
       process.cwd(),
       "src/mock/prediction_results",
       patientId,
-      `recommended_schedule_results_${patientId}.json`
+      `${modelId}.json`
     );
     
     try {
-      const resultsData = await fs.readFile(recommendedPath, "utf-8");
+      const resultsData = await fs.readFile(resultsPath, "utf-8");
       const results = JSON.parse(resultsData);
       
       // Check if the file has the new structure with iterations
@@ -50,63 +49,13 @@ async function loadModelParamsFromFile(patientId: string) {
           };
         }
       }
-    } catch {
-      // If recommended file doesn't exist, try manual schedule results
-    }
-
-    // Try to load from manual schedule results
-    const manualPath = path.join(
-      process.cwd(),
-      "src/mock/prediction_results",
-      patientId,
-      `manual_schedule_results_${patientId}.json`
-    );
-    
-    try {
-      const resultsData = await fs.readFile(manualPath, "utf-8");
-      const results = JSON.parse(resultsData);
-      
-      // Check if the file has the new structure with iterations
-      if (results.iter_1) {
-        // New structure: randomly select one iteration
-        const iterations = Object.keys(results).filter(key => key.startsWith('iter_'));
-        if (iterations.length > 0) {
-          const randomIterKey = iterations[Math.floor(Math.random() * iterations.length)];
-          const selectedIteration = results[randomIterKey];
-          
-          if (selectedIteration.last_param) {
-            return {
-              a: selectedIteration.last_param.a,
-              b: selectedIteration.last_param.b,
-              c: selectedIteration.last_param.c,
-              noise: selectedIteration.last_param.noise_scale,
-              sig_slope: selectedIteration.last_param.sig_slope,
-              sig_offset: selectedIteration.last_param.sig_offset,
-              error_scale: selectedIteration.last_param.error_scale
-            };
-          }
-        }
-      } else {
-        // Old structure: use the data directly
-        if (results.last_param) {
-          return {
-            a: results.last_param.a,
-            b: results.last_param.b,
-            c: results.last_param.c,
-            noise: results.last_param.noise_scale,
-            sig_slope: results.last_param.sig_slope,
-            sig_offset: results.last_param.sig_offset,
-            error_scale: results.last_param.error_scale
-          };
-        }
-      }
-    } catch {
-      // If manual file doesn't exist, return null
+    } catch (error) {
+      console.log(`Failed to load prediction results for patient ${patientId} with model ID ${modelId}:`, error);
     }
     
     return null;
   } catch (error) {
-    console.log(`Failed to load model parameters for patient ${patientId}:`, error);
+    console.error("Error loading model parameters:", error);
     return null;
   }
 }

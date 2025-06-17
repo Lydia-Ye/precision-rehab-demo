@@ -8,19 +8,20 @@ export async function GET(
 ) {
   try {
     const { patientId } = await params;
-    
-    // Try to load from recommended schedule results first
-    const recommendedPath = path.join(
+    const searchParams = request.nextUrl.searchParams;
+    const modelId = searchParams.get('modelId') || '0';
+
+    // Try to load from the new structure
+    const resultsPath = path.join(
       process.cwd(),
       "src/mock/prediction_results",
       patientId,
-      `recommended_schedule_results_${patientId}.json`
+      `${modelId}.json`
     );
-    
+
     try {
-      const resultsData = await fs.readFile(recommendedPath, "utf-8");
+      const resultsData = await fs.readFile(resultsPath, "utf-8");
       const results = JSON.parse(resultsData);
-      
       // Check if the file has the new structure with iterations
       if (results.iter_1) {
         // New structure: randomly select one iteration
@@ -28,7 +29,6 @@ export async function GET(
         if (iterations.length > 0) {
           const randomIterKey = iterations[Math.floor(Math.random() * iterations.length)];
           const selectedIteration = results[randomIterKey];
-          
           if (selectedIteration.last_param) {
             return NextResponse.json(selectedIteration.last_param);
           }
@@ -40,43 +40,9 @@ export async function GET(
         }
       }
     } catch {
-      console.log(`No recommended schedule results for patient ${patientId}`);
+      console.log(`No prediction results for patient ${patientId} with model ID ${modelId}`);
     }
 
-    // Try to load from manual schedule results
-    const manualPath = path.join(
-      process.cwd(),
-      "src/mock/prediction_results",
-      patientId,
-      `manual_schedule_results_${patientId}.json`
-    );
-    
-    try {
-      const resultsData = await fs.readFile(manualPath, "utf-8");
-      const results = JSON.parse(resultsData);
-      
-      // Check if the file has the new structure with iterations
-      if (results.iter_1) {
-        // New structure: randomly select one iteration
-        const iterations = Object.keys(results).filter(key => key.startsWith('iter_'));
-        if (iterations.length > 0) {
-          const randomIterKey = iterations[Math.floor(Math.random() * iterations.length)];
-          const selectedIteration = results[randomIterKey];
-          
-          if (selectedIteration.last_param) {
-            return NextResponse.json(selectedIteration.last_param);
-          }
-        }
-      } else {
-        // Old structure: use the data directly
-        if (results.last_param) {
-          return NextResponse.json(results.last_param);
-        }
-      }
-    } catch {
-      console.log(`No manual schedule results for patient ${patientId}`);
-    }
-    
     return NextResponse.json({ error: "No model parameters found" }, { status: 404 });
   } catch (error) {
     console.error("Error loading model parameters:", error);

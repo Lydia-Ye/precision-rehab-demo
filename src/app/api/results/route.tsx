@@ -11,13 +11,13 @@ import { generatePredictionResults } from "@/mock/resultsGenerator";
 const filePath = path.join(process.cwd(), "src/app/api/data/patients.json");
 
 // Helper function to load prediction results from file
-async function loadPredictionResults(patientId: string) {
+async function loadPredictionResults(patientId: string, modelId: string = '0') {
   try {
     const resultsPath = path.join(
       process.cwd(),
       "src/mock/prediction_results",
       patientId,
-      `recommended_schedule_results_${patientId}.json`
+      `${modelId}.json`
     );
     
     const resultsData = await fs.readFile(resultsPath, "utf-8");
@@ -50,7 +50,7 @@ async function loadPredictionResults(patientId: string) {
     
     return null;
   } catch (error) {
-    console.log(`Failed to load prediction results for patient ${patientId}:`, error);
+    console.log(`Failed to load prediction results for patient ${patientId} with model ID ${modelId}:`, error);
     return null;
   }
 }
@@ -58,7 +58,8 @@ async function loadPredictionResults(patientId: string) {
 // POST route makes a request for recommended results.
 export async function POST(req: Request) {
   try {
-    const data: ResultsPostRequest = await req.json();
+    const data: ResultsPostRequest & { modelId?: string } = await req.json();
+    const modelId = data.modelId || '0';
 
     // Read patient data from patients.json
     const patientsRaw = await fs.readFile(filePath, "utf-8");
@@ -83,7 +84,7 @@ export async function POST(req: Request) {
     };
 
     // Try to load prediction results from file first
-    let results = await loadPredictionResults(String(params.patientId));
+    let results = await loadPredictionResults(String(params.patientId), modelId);
     
     // If file loading fails, fall back to generating recommended results
     if (!results) {

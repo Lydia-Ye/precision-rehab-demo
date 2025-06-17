@@ -3,14 +3,14 @@ export interface ModelPrediction {
   futureAvgOut: number[];
   minOut: number[];
   futureDoseData: number[];
+  currentModelId: string;
 }
 
-export async function loadPredictionResults(patientId: string): Promise<{
+export async function loadPredictionResults(patientId: string, modelId: string = '0'): Promise<{
   recommended?: ModelPrediction;
-  manual?: ModelPrediction;
 } | null> {
   try {
-    const response = await fetch(`/api/prediction-results/${patientId}`);
+    const response = await fetch(`/api/prediction-results/${patientId}?modelId=${modelId}`);
     if (!response.ok) {
       return null;
     }
@@ -22,7 +22,6 @@ export async function loadPredictionResults(patientId: string): Promise<{
 
     const results: {
       recommended?: ModelPrediction;
-      manual?: ModelPrediction;
     } = {};
 
     // Process recommended schedule results
@@ -31,17 +30,8 @@ export async function loadPredictionResults(patientId: string): Promise<{
         maxOut: data.recommended.maxPrediction || [],
         futureAvgOut: data.recommended.meanPrediction || [],
         minOut: data.recommended.minPrediction || [],
-        futureDoseData: data.recommended.dosage || []
-      };
-    }
-
-    // Process manual schedule results
-    if (data.manual) {
-      results.manual = {
-        maxOut: data.manual.max_outcomes || [],
-        futureAvgOut: data.manual.median_trajectory || [],
-        minOut: data.manual.min_outcomes || [],
-        futureDoseData: data.manual.median_actions || []
+        futureDoseData: data.recommended.dosage || [],
+        currentModelId: modelId
       };
     }
 

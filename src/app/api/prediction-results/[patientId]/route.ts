@@ -54,35 +54,38 @@ export async function GET(
 ) {
   try {
     const { patientId } = await params;
-    
     const results: PredictionResults = {};
 
-    // Load recommended schedule results
-    const recommendedPath = path.join(
+    // Get the model ID from the query parameter, default to 0 if not provided
+    const searchParams = request.nextUrl.searchParams;
+    const modelId = searchParams.get('modelId') || '0';
+
+    // Load prediction results for the specified model
+    const resultsPath = path.join(
       process.cwd(),
       "src/mock/prediction_results",
       patientId,
-      `recommended_schedule_results_${patientId}.json`
+      `${modelId}.json`
     );
     
     try {
-      const recommendedData = await fs.readFile(recommendedPath, "utf-8");
-      const recommendedResults = JSON.parse(recommendedData);
+      const resultsData = await fs.readFile(resultsPath, "utf-8");
+      const parsedResults = JSON.parse(resultsData);
       
       // Check if the file has the new structure with iterations
-      if (recommendedResults.iter_1) {
+      if (parsedResults.iter_1) {
         // New structure: randomly select one iteration
-        const iterations = Object.keys(recommendedResults).filter(key => key.startsWith('iter_'));
+        const iterations = Object.keys(parsedResults).filter(key => key.startsWith('iter_'));
         if (iterations.length > 0) {
           const randomIterKey = iterations[Math.floor(Math.random() * iterations.length)];
-          results.recommended = recommendedResults[randomIterKey];
+          results.recommended = parsedResults[randomIterKey];
         }
       } else {
         // Old structure: use the data directly
-        results.recommended = recommendedResults;
+        results.recommended = parsedResults;
       }
     } catch (error) {
-      console.log(`No recommended schedule results for patient ${patientId}:`, error);
+      console.log(`No prediction results for patient ${patientId} with model ID ${modelId}:`, error);
     }
 
     // Load manual schedule results
