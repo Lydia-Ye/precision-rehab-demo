@@ -16,25 +16,38 @@ export async function POST(req: Request) {
   try {
     const data: ResultsPostRequest = await req.json();
 
+    // Read patient data from patients.json
+    const patientsRaw = await fs.readFile(filePath, "utf-8");
+    const patients = JSON.parse(patientsRaw);
+    const patient = patients.find((p: Patient) => p.id === data.id);
+
+    if (!patient) {
+      return NextResponse.json({ error: "Patient not found" }, { status: 404 });
+    }
+
+    // Get the last outcome from the patient's data
+    const lastOutcome = patient.outcomes && patient.outcomes.length > 0 
+      ? patient.outcomes[patient.outcomes.length - 1] 
+      : 0;
+
     // Format request params.
     const params = {
       patientId: data.id,
       alias: data.alias,
       budget: data.budget,
       horizon: data.horizon,
-      y_init: data.y_init, 
+      y_init: lastOutcome,
     };
 
     // Get mock results - either from predefined data or generate new ones
     let results = mockResults[params.patientId];
     if (!results) {
-      // Use a default value of 0 if y_init is undefined
-      const yInit = params.y_init ?? 0;
       results = generatePredictionResults(
         String(params.patientId),
         params.budget,
         params.horizon,
-        yInit
+        params.y_init,
+        patient.maxDose
       );
       // Store the generated results for future use
       mockResults[params.patientId] = results;

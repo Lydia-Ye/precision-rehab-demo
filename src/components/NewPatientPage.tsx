@@ -164,6 +164,7 @@ useEffect(() => {
   const handleManualSchedule = async (futureActions: number[]) => {
     try {
       const requestBody = {
+        id: patient.id,
         params: Array.from({ length: 10 }, () => ({ ...bayesianParam })),
         y_init: pastAvgOut.at(-1),
         past_actions: pastDoseData,
