@@ -72,9 +72,9 @@ export async function POST(req: Request) {
 
     // Map the results to match the expected format
     results = {
-      maxPrediction: results.max_outcomes,
-      minPrediction: results.min_outcomes,
-      meanPrediction: results.future_outcomes,
+      maxPrediction: 'max_outcomes' in results ? results.max_outcomes : results.max,
+      minPrediction: 'min_outcomes' in results ? results.min_outcomes : results.min,
+      meanPrediction: 'future_outcomes' in results ? results.future_outcomes : results.mean,
       dosage: future_actions,
     };
 

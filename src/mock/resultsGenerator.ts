@@ -233,18 +233,26 @@ export const generateManualScheduleResults = async (
     }
 
   // --- NEW: Try to load patient-specific parameters from file ---
-  let fileParams: any = null;
+  let fileParams: {
+    a?: number;
+    b?: number;
+    c?: number;
+    noise_scale?: number;
+    noise?: number;
+    sig_slope?: number;
+    sig_offset?: number;
+  } | null = null;
   if (patientId) {
     fileParams = await loadModelParamsFromFile(patientId);
   }
 
   // Use parameters from param, fallback to defaults if missing
-  const a = fileParams.a ?? 0.7;
-  const b = fileParams.b ?? 0.15;
-  const c = fileParams.c ?? 1.8;
-  const noise_scale = fileParams.noise_scale ?? fileParams.noise ?? 0.3;
-  const sig_slope = fileParams.sig_slope ?? 0.2;
-  const sig_offset = fileParams.sig_offset ?? -3;
+  const a = fileParams?.a ?? 0.7;
+  const b = fileParams?.b ?? 0.15;
+  const c = fileParams?.c ?? 1.8;
+  const noise_scale = fileParams?.noise_scale ?? fileParams?.noise ?? 0.3;
+  const sig_slope = fileParams?.sig_slope ?? 0.2;
+  const sig_offset = fileParams?.sig_offset ?? -3;
   const MAX_MAL = 5.0;
 
   // Helper functions for state <-> outcome
@@ -298,9 +306,9 @@ export const generateManualScheduleResults = async (
 
   // For each time step, collect all outcomes and compute percentiles
   const nSteps = futureActions.length;
-  let future_outcomes: number[] = [];
-  let min_outcomes: number[] = [];
-  let max_outcomes: number[] = [];
+  const future_outcomes: number[] = [];
+  const min_outcomes: number[] = [];
+  const max_outcomes: number[] = [];
 
   for (let t = 0; t < nSteps; t++) {
     const stepOutcomes = allOutcomes.map((traj) => traj[t]);
