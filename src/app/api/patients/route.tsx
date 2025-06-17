@@ -142,11 +142,10 @@ export async function PUT(req: Request) {
     files = files.filter(f => f.endsWith('.json'));
     const modelIds = files.map(f => f.replace('.json', ''));
     const currentModelId = data.modelId || '0';
-    const otherModelIds = modelIds.filter(id => id !== currentModelId);
-    let newModelId = currentModelId;
-    if (otherModelIds.length > 0) {
-      newModelId = otherModelIds[Math.floor(Math.random() * otherModelIds.length)];
-    }
+    // Get the next sequential ID
+    const nextModelId = String(Number(currentModelId) + 1);
+    // If the next ID doesn't exist in the available IDs, use the first available ID
+    const newModelId = modelIds.includes(nextModelId) ? nextModelId : modelIds[0];
 
     // Return updated patient and new modelId
     return NextResponse.json({ message: "Patient updated", patient: patient, newModelId });
