@@ -502,12 +502,10 @@
     "outcomes": [
       2,
       2.5,
-      3.4,
-      3
+      3.4
     ],
     "actions": [
       4,
-      5,
       5,
       null
     ],
@@ -619,7 +617,7 @@
   },
   {
     "name": "15",
-    "budget": 28,
+    "budget": 60,
     "maxDose": 20,
     "age": 80,
     "weeksSinceStroke": 15,
@@ -722,7 +720,7 @@
       10,
       15,
       18,
-      20
+      null
     ],
     "modelBayesian": {
       "modelAlias": "18_Patient_18_bayes_version_8_updated",
@@ -745,16 +743,16 @@
     "horizon": 12,
     "past": false,
     "outcomes": [
-      0.15,
-      0.25,
-      0.35,
-      0.45
+      3.15,
+      3.25,
+      3.35,
+      3.45
     ],
     "actions": [
       5,
       3,
       6,
-      8
+      null
     ],
     "modelBayesian": {
       "modelAlias": "19_Patient_19_bayes_version_1",
@@ -777,12 +775,12 @@
     "horizon": 12,
     "past": true,
     "outcomes": [
-      0.1,
-      0.2,
-      0.3,
-      0.4,
-      0.5,
-      0.6
+      1,
+      2.4,
+      2.8,
+      3.6,
+      3.9,
+      4.8
     ],
     "actions": [
       5,
@@ -790,7 +788,7 @@
       4,
       5,
       6,
-      7
+      null
     ],
     "modelBayesian": {
       "modelAlias": "20_Patient_20_bayes_version_1",
@@ -804,7 +802,7 @@
   {
     "id": "21",
     "name": "Patient 21",
-    "budget": 30,
+    "budget": 60,
     "maxDose": 20,
     "age": 45,
     "weeksSinceStroke": 3,
@@ -813,14 +811,14 @@
     "horizon": 12,
     "past": false,
     "outcomes": [
-      0.25,
-      0.35,
-      0.45
+      2.5,
+      3.5,
+      4.5
     ],
     "actions": [
       4,
       5,
-      6
+      null
     ],
     "modelBayesian": {
       "modelAlias": "21_Patient_21_bayes_version_1",
@@ -858,7 +856,7 @@
       20,
       5,
       8,
-      10
+      null
     ],
     "modelBayesian": {
       "modelAlias": "22_Patient_22_bayes_version_1",
