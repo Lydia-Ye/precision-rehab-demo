@@ -6,12 +6,36 @@ import { Patient } from "@/types/patient";
 import { ResultsPostRequest } from "@/types/resultsPostRequest";
 import { ResultsPostResponse } from "@/types/resultsPostResponse";
 import { ResultsPutRequest } from "@/types/resultsPutRequest";
-import { mockResults } from "@/mock/results";
 import { generatePredictionResults } from "@/mock/resultsGenerator";
 
 const filePath = path.join(process.cwd(), "src/app/api/data/patients.json");
 
-// POST route makes a request for results using a model alias.
+// Helper function to load prediction results from file
+async function loadPredictionResults(patientId: string) {
+  try {
+    const resultsPath = path.join(
+      process.cwd(),
+      "src/mock/prediction_results",
+      patientId,
+      `recommended_schedule_results_${patientId}.json`
+    );
+    
+    const resultsData = await fs.readFile(resultsPath, "utf-8");
+    const results = JSON.parse(resultsData);
+    
+    return {
+      maxPrediction: results.maxPrediction,
+      minPrediction: results.minPrediction,
+      meanPrediction: results.meanPrediction,
+      dosage: results.dosage,
+    };
+  } catch (error) {
+    console.log(`Failed to load prediction results for patient ${patientId}:`, error);
+    return null;
+  }
+}
+
+// POST route makes a request for recommended results.
 export async function POST(req: Request) {
   try {
     const data: ResultsPostRequest = await req.json();
@@ -33,14 +57,15 @@ export async function POST(req: Request) {
     // Format request params.
     const params = {
       patientId: data.id,
-      alias: data.alias,
       budget: data.budget,
       horizon: data.horizon,
       y_init: lastOutcome,
     };
 
-    // Get mock results - either from predefined data or generate new ones
-    let results = mockResults[params.patientId];
+    // Try to load prediction results from file first
+    let results = await loadPredictionResults(String(params.patientId));
+    
+    // If file loading fails, fall back to generating recommended results
     if (!results) {
       results = generatePredictionResults(
         String(params.patientId),
@@ -49,8 +74,6 @@ export async function POST(req: Request) {
         params.y_init,
         patient.maxDose
       );
-      // Store the generated results for future use
-      mockResults[params.patientId] = results;
     }
 
     // Return results.
