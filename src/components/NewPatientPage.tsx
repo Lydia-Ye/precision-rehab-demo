@@ -276,19 +276,6 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
     setPastDoseData(newDoseData as number[]);
   };
 
-  const [patients, setPatients] = useState<Patient[]>([]);
-
-  useEffect(() => {
-    fetch("/api/patients")
-      .then((res) => res.json())
-      .then((data) => setPatients(data))
-      .catch((error) => console.error("Error loading patients:", error));
-  }, []);
-
-  const currentPatientIndex = patients.findIndex(p => p.id === patient.id);
-  const hasNextPatient = currentPatientIndex < patients.length - 1;
-  const hasPreviousPatient = currentPatientIndex > 0;
-
   const handleCloseManualScheduleForm = () => {
     setShowManualScheduleForm(false);
     if (manualPrediction.futureAvgOut.length === 0) {
