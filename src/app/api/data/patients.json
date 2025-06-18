@@ -565,15 +565,17 @@
       2,
       2.5,
       3.4,
-      3.55
+      3.45,
+      3.570543
     ],
     "actions": [
       4,
       5,
-      10,
+      9,
+      15,
       null
     ],
-    "id": "12",
+    "id": "13",
     "modelBayesian": {
       "modelAlias": "11_Patient_11_bayes_version_8_updated",
       "modelUri": "/mock/uri/11_Patient_11_bayes_version_8_updated"
@@ -583,7 +585,7 @@
       "modelUri": "mock://models/sgld/11-1"
     }
   },{
-    "name": "A - Week 8",
+    "name": "A - Week 10",
     "budget": 60,
     "maxDose": 20,
     "age": 80,
@@ -596,15 +598,19 @@
       2,
       2.5,
       3.4,
-      3.55
+      3.45,
+      3.570543,
+      3.9990243
     ],
     "actions": [
       4,
       5,
-      10,
+      9,
+      15,
+      15,
       null
     ],
-    "id": "12",
+    "id": "14",
     "modelBayesian": {
       "modelAlias": "11_Patient_11_bayes_version_8_updated",
       "modelUri": "/mock/uri/11_Patient_11_bayes_version_8_updated"
@@ -612,6 +618,146 @@
     "modelSGLD": {
       "modelAlias": "11_Patient_11_SGLD_version_1",
       "modelUri": "mock://models/sgld/11-1"
+    }
+  },
+  {
+    "name": "B - Week 6",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 30,
+    "weeksSinceStroke": 15,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 10,
+    "past": false,
+    "outcomes": [
+      2,
+      2,
+      2.2,
+      2.5
+    ],
+    "actions": [
+      5,
+      0,
+      5,
+      null
+    ],
+    "id": "15",
+    "modelBayesian": {
+      "modelAlias": "12_Patient_12_bayes_version_22",
+      "modelUri": "runs:/f4f75620f4a14bfea173ea3d83133399/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "12_Patient_12_SGLD_version_1",
+      "modelUri": "runs:/524e518c45564e2da639e7c236190144/mal_planner_model"
+    }
+  },
+  {
+    "name": "B - Week 8",
+    "budget": 60,
+    "maxDose": 6,
+    "age": 30,
+    "weeksSinceStroke": 15,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 10,
+    "past": false,
+    "outcomes": [
+      2,
+      2,
+      2.2,
+      2.5,
+      2.6
+    ],
+    "actions": [
+      5,
+      0,
+      5,
+      20,
+      null
+    ],
+    "id": "16",
+    "modelBayesian": {
+      "modelAlias": "12_Patient_12_bayes_version_22",
+      "modelUri": "runs:/f4f75620f4a14bfea173ea3d83133399/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "12_Patient_12_SGLD_version_1",
+      "modelUri": "runs:/524e518c45564e2da639e7c236190144/mal_planner_model"
+    }
+  },
+  {
+    "name": "B - Week 10",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 30,
+    "weeksSinceStroke": 15,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 10,
+    "past": false,
+    "outcomes": [
+      2,
+      2,
+      2.2,
+      2.5,
+      2.6,
+      2.863443
+    ],
+    "actions": [
+      5,
+      0,
+      5,
+      20,
+      20,
+      null
+    ],
+    "id": "17",
+    "modelBayesian": {
+      "modelAlias": "12_Patient_12_bayes_version_22",
+      "modelUri": "runs:/f4f75620f4a14bfea173ea3d83133399/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "12_Patient_12_SGLD_version_1",
+      "modelUri": "runs:/524e518c45564e2da639e7c236190144/mal_planner_model"
+    }
+  },
+  {
+    "name": "B - Week 12",
+    "budget": 60,
+    "maxDose": 20,
+    "age": 30,
+    "weeksSinceStroke": 15,
+    "leftStroke": false,
+    "male": false,
+    "horizon": 10,
+    "past": false,
+    "outcomes": [
+      2,
+      2,
+      2.2,
+      2.5,
+      2.6,
+      2.863443,
+      3.1341231
+    ],
+    "actions": [
+      5,
+      0,
+      5,
+      20,
+      20,
+      10,
+      null
+    ],
+    "id": "18",
+    "modelBayesian": {
+      "modelAlias": "12_Patient_12_bayes_version_22",
+      "modelUri": "runs:/f4f75620f4a14bfea173ea3d83133399/mal_planner_model"
+    },
+    "modelSGLD": {
+      "modelAlias": "12_Patient_12_SGLD_version_1",
+      "modelUri": "runs:/524e518c45564e2da639e7c236190144/mal_planner_model"
     }
   }
 ]
