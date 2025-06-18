@@ -27,8 +27,8 @@ const PredictionSummary: React.FC<PredictionSummaryProps> = ({ pastAvgOut, bayes
   const hasBayesian = bayesianPrediction.futureAvgOut.length > 0;
   const hasManual = manualPrediction.futureAvgOut.length > 0;
   const nextWeek = to3dp(pastAvgOut.length * 2);
-  const bayesianMal = hasBayesian ? to3dp(bayesianPrediction.futureAvgOut[0]) : null;
-  const manualMal = hasManual ? to3dp(manualPrediction.futureAvgOut[0]) : null;
+  const bayesianMal = hasBayesian ? to3dp(bayesianPrediction.futureAvgOut[1]) : null;
+  const manualMal = hasManual ? to3dp(manualPrediction.futureAvgOut[1]) : null;
   const bayesianHours = hasBayesian ? to3dp(bayesianPrediction.futureDoseData[0]) : null;
   const manualHours = hasManual ? to3dp(manualPrediction.futureDoseData[0]) : null;
 
