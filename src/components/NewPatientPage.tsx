@@ -388,7 +388,7 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
         <div className="space-y-8">
           <div className="space-y-2">
             <h2 className="text-sm font-medium text-gray-500">Patient Detail</h2>
-            <h1 className="text-4xl font-bold text-[var(--foreground)]">Patient {patient.name}</h1>
+            <h1 className="text-2xl font-bold text-[var(--foreground)]">Patient {patient.name}</h1>
             <Badge variant="active">ACTIVE</Badge>
           </div>
 
@@ -583,19 +583,22 @@ export default function NewPatientPage({ patient, setPatient }: PatientPageProps
 
           {/* Navigation Buttons */}
           <div className="flex justify-between items-center">
-            {hasPreviousPatient && (
+            {/* Previous Time Step Button */}
+            {Number(patient.id) > 11 && Number(patient.id) !== 15 ? (
               <Link href={`/patient/${Number(patient.id) - 1}`}>
-                <Button variant="outline">← Previous Patient</Button>
+                <Button variant="outline">← Previous Time Step</Button>
               </Link>
+            ) : (
+              <div></div>
             )}
-            {!hasPreviousPatient && <div></div>}
 
-            {hasNextPatient && (
+            {Number(patient.id) !== 14 && Number(patient.id) < 18 ? (
               <Link href={`/patient/${Number(patient.id) + 1}`}>
-                <Button variant="outline">Next Patient →</Button>
+                <Button variant="outline">Next Time Step →</Button>
               </Link>
+            ) : (
+              <div></div>
             )}
-            {!hasNextPatient && <div></div>}
           </div>
         </div>
       </main>
