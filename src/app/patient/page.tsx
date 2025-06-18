@@ -32,9 +32,19 @@ export default function AllPatientsPage() {
 
   useEffect(() => {
     if (statusFilter === "All") {
-      setFilteredTableData(tableData);
+      // Only show A and B for active, all for past
+      const filtered = [
+        { id: "11", name: "A", past: false },
+        { id: "15", name: "B", past: false },
+        ...tableData.filter(row => row.past)
+      ];
+      setFilteredTableData(filtered);
     } else if (statusFilter === "Active") {
-      setFilteredTableData(tableData.filter(row => !row.past));
+      // Hardcode only A and B for Active
+      setFilteredTableData([
+        { id: "11", name: "A", past: false },
+        { id: "15", name: "B", past: false },
+      ]);
     } else {
       setFilteredTableData(tableData.filter(row => row.past));
     }
